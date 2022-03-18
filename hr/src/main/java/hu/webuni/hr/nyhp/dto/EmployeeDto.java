@@ -1,16 +1,20 @@
-package hu.webuni.hr.nyhp.model;
+package hu.webuni.hr.nyhp.dto;
 
 import java.time.LocalDateTime;
 
-public class Employee {
+public class EmployeeDto {
+
 	private long id;
 	private String name;
 	private String position;
 	private int salary;
 	private LocalDateTime startd;
+	
+	public EmployeeDto() {
+	}
 
-	public Employee(long id, String name, String position, int salary, LocalDateTime startd) {
-		// super();
+	public EmployeeDto(long id, String name, String position, int salary, LocalDateTime startd) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.position = position;
@@ -38,7 +42,7 @@ public class Employee {
 		return position;
 	}
 
-	public void setPost(String positiont) {
+	public void setPosition(String position) {
 		this.position = position;
 	}
 
