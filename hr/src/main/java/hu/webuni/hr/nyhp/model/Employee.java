@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 public class Employee {
 	private long id;
 	private String name;
-	private String post;
+	private String position;
 	private int salary;
 	private LocalDateTime startd;
 
-	public Employee(long id, String name, String post, int salary, LocalDateTime startd) {
+	public Employee(long id, String name, String position, int salary, LocalDateTime startd) {
 		//super();
 		this.id = id;
 		this.name = name;
-		this.post = post;
+		this.position = position;
 		this.salary = salary;
 		this.startd = startd;
 	}
@@ -30,12 +30,12 @@ public class Employee {
 		this.name = name;
 	}
 
-	public String getPost() {
-		return post;
+	public String getPosition() {
+		return position;
 	}
 
-	public void setPost(String post) {
-		this.post = post;
+	public void setPost(String positiont) {
+		this.position = position;
 	}
 
 	public int getSalary() {
