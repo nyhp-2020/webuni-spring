@@ -8,6 +8,10 @@ public class Employee {
 	private String position;
 	private int salary;
 	private LocalDateTime startd;
+	
+	public Employee() {
+		
+	}
 
 	public Employee(long id, String name, String position, int salary, LocalDateTime startd) {
 		// super();
@@ -38,7 +42,7 @@ public class Employee {
 		return position;
 	}
 
-	public void setPost(String positiont) {
+	public void setPosition(String position) {
 		this.position = position;
 	}
 
@@ -58,4 +62,5 @@ public class Employee {
 		this.startd = startd;
 	}
 
+	
 }

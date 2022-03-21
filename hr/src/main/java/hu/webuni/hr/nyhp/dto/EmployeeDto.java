@@ -9,7 +9,7 @@ public class EmployeeDto {
 	private String position;
 	private int salary;
 	private LocalDateTime startd;
-	
+
 	public EmployeeDto() {
 	}
 

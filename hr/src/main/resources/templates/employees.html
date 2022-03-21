@@ -23,5 +23,14 @@
 			<th th:text="${employee.startd}">startd</th>
 		</tr>
 	</table>
+	
+	<form th:action="@{/employees}" method="post" th:object="${newEmployee}">
+		Id: <input th:field="*{id}" /> <br />
+		Name: <input th:field="*{name}" /> <br /> 
+		Position: <input th:field="*{position}" /> <br />
+		Salary: <input th:field="*{salary}" /> <br />
+		Start Date: <input th:field="*{startd}" /> <br />
+		<input type="submit" value="Add" />
+	</form>
 </body>
 </html>
