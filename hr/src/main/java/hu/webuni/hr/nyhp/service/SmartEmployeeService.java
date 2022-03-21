@@ -98,16 +98,29 @@ public class SmartEmployeeService implements EmployeeService {
 //		else
 //			return 0;
 
+		//Version 5.
+//		if (diffyears < conf.getSmart().getLimit1())
+//			return conf.getSmart().getPercent1();
+//		else if (diffyears >= conf.getSmart().getLimit1() && diffyears < conf.getSmart().getLimit2())
+//			return conf.getSmart().getPercent2();
+//		else if (diffyears >= conf.getSmart().getLimit2() && diffyears < conf.getSmart().getLimit3())
+//			return conf.getSmart().getPercent3();
+//		else if (diffyears >= conf.getSmart().getLimit3())
+//			return conf.getSmart().getPercent4();
+//		else
+//			return 0;
+
+		//Version 6.
 		if (diffyears < conf.getSmart().getLimit1())
 			return conf.getSmart().getPercent1();
-		else if (diffyears >= conf.getSmart().getLimit1() && diffyears < conf.getSmart().getLimit2())
+		else if (diffyears < conf.getSmart().getLimit2())
 			return conf.getSmart().getPercent2();
-		else if (diffyears >= conf.getSmart().getLimit2() && diffyears < conf.getSmart().getLimit3())
+		else if (diffyears < conf.getSmart().getLimit3())
 			return conf.getSmart().getPercent3();
 		else if (diffyears >= conf.getSmart().getLimit3())
 			return conf.getSmart().getPercent4();
 		else
-			return 0;
+			return 0;	
 	}
 
 }
