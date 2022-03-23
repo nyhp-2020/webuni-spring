@@ -16,21 +16,21 @@
 		</tr>
 
 		<tr th:each="employee : ${employees}">
-			<th th:text="${employee.id}">id</th>
-			<th th:text="${employee.name}">name</th>
-			<th th:text="${employee.position}">position</th>
-			<th th:text="${employee.salary}">salary</th>
-			<th th:text="${employee.startd}">startd</th>
+			<th th:text="${employee.id}"></th>
+			<th><a th:text="${employee.name}" th:href="@{'/employee/'+${employee.id}}"></a></th>
+			<th th:text="${employee.position}"></th>
+			<th th:text="${employee.salary}"></th>
+			<th th:text="${employee.startd}"></th>
 		</tr>
 	</table>
-	
-	<form th:action="@{/employees}" method="post" th:object="${newEmployee}">
-		Id: <input th:field="*{id}" /> <br />
-		Name: <input th:field="*{name}" /> <br /> 
-		Position: <input th:field="*{position}" /> <br />
-		Salary: <input th:field="*{salary}" /> <br />
-		Start Date: <input th:field="*{startd}" /> <br />
-		<input type="submit" value="Add" />
+
+	<form th:action="@{/employees}" method="post"
+		th:object="${newEmployee}">
+		Id: <input th:field="*{id}" /> <br /> Name: <input
+			th:field="*{name}" /> <br /> Position: <input
+			th:field="*{position}" /> <br /> Salary: <input
+			th:field="*{salary}" /> <br /> Start Date: <input
+			th:field="*{startd}" /> <br /> <input type="submit" value="Add" />
 	</form>
 </body>
 </html>
