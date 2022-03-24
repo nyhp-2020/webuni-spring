@@ -13,6 +13,7 @@
 			<th>Position</th>
 			<th>Salary</th>
 			<th>Start Date</th>
+			<th></th>
 		</tr>
 
 		<tr th:each="employee : ${employees}">
@@ -21,6 +22,7 @@
 			<th th:text="${employee.position}"></th>
 			<th th:text="${employee.salary}"></th>
 			<th th:text="${employee.startd}"></th>
+			<th><a th:href="@{'/employee?id='+${employee.id}}">Töröl</a></th>
 		</tr>
 	</table>
 

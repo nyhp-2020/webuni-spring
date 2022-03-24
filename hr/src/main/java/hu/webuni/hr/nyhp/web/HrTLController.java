@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import hu.webuni.hr.nyhp.model.Employee;
 
@@ -60,4 +61,11 @@ public class HrTLController {
 		return "redirect:employees";
 	}
 
+	@GetMapping("/employee")
+	public String deleteEmployee(Map<String, Object> model, @RequestParam int id) {
+		Employee em = allEmployees.stream().filter(e -> e.getId() == id).findAny().get();
+		int index = allEmployees.indexOf(em);
+		allEmployees.remove(index);
+		return "redirect:employees";
+	}
 }
