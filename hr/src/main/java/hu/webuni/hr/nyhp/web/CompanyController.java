@@ -29,8 +29,6 @@ public class CompanyController {
 	private Map<Long, CompanyDto> companies = new HashMap<>();
 
 	{
-		// companies.put(1L, new CompanyDto(1L, "BME", "Dunapart", null));
-		
 		LocalDateTime ldt = LocalDateTime.of(2019, 9, 20, 0, 0, 0, 0);
 		EmployeeDto employeeDto1 = new EmployeeDto(1, "Robert", "Director", 20000, ldt);
 		EmployeeDto employeeDto2 = new EmployeeDto(2, "Paul", "Manager", 10000, ldt);
@@ -38,34 +36,35 @@ public class CompanyController {
 		companyDto.addEmployeeDto(employeeDto1);
 		companyDto.addEmployeeDto(employeeDto2);
 		companies.put(1L, companyDto);
-		
-		//companies.put(1L, new CompanyDto(1L, "20-22", "BME", "Dunapart", null));
-		
 	}
 
 	@GetMapping
 	public List<CompanyDto> getAll(@RequestParam(required = false) boolean full) {
 		if (full)
 			return new ArrayList<>(companies.values());
-		else
-			return companies
-					.values()
-					.stream()
-					.collect(Collectors.toList());
+		else {
+			List<CompanyDto> complist = new ArrayList<>();
+			for (CompanyDto companyDto : companies.values()) {
+				CompanyDto newcoDto = new CompanyDto(companyDto); // special copy constructor
+				complist.add(newcoDto);
+			}
+			return complist;
+		}
+//			return companies
+//					.values()
 //					.stream()
-//					.map(c -> c.setEmployees(null)).collect(Collectors.toList());
-//					
-					
-				
+//					.collect(Collectors.toList());				
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CompanyDto> getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
-		// System.out.println(full);
 		if (!companies.containsKey(id))
 			return ResponseEntity.notFound().build();
 
-		return ResponseEntity.ok(companies.get(id));
+		if (full)
+			return ResponseEntity.ok(companies.get(id));
+		else
+			return ResponseEntity.ok(new CompanyDto(companies.get(id)));
 	}
 
 	@PostMapping
@@ -76,6 +75,16 @@ public class CompanyController {
 			return companyDto;
 		} else
 			return null;
+	}
+
+	@PostMapping("/employee")
+	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {
+		if (!companies.containsKey(coid)) {
+			return null;
+		} else {
+			companies.get(coid).addEmployeeDto(employeeDto);
+			return employeeDto;
+		}
 	}
 
 	@PutMapping("/{id}")
@@ -92,4 +101,17 @@ public class CompanyController {
 	public void deleteCompany(@PathVariable long id) {
 		companies.remove(id);
 	}
+	
+	@DeleteMapping("/employee")
+	public void deleteEmployee(@RequestParam long coid,@RequestParam long emid) {
+		companies.get(coid).delEmployeeDto(emid);
+	}
+	
+	@PutMapping("/employee")
+	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees,@RequestParam long coid) {
+		companies.get(coid).setEmployees(newemployees);
+		return newemployees;
+	}
+	
+
 }

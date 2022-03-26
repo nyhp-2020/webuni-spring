@@ -12,19 +12,33 @@ public class CompanyDto {
 	private String name;
 	private String address;
 	
-	private List<EmployeeDto> Employees = new ArrayList<>();
+	private List<EmployeeDto> employees = new ArrayList<>();
+	
+	//special copy constructor
+	public CompanyDto(CompanyDto companyDto) { 
+		this.id = companyDto.id;
+		this.registry = companyDto.registry;
+		this.name = companyDto.name;
+		this.address = companyDto.address;
+		this.employees = null;
+	}
 
-	public CompanyDto(long id, String registry, String name, String address) { //, List<EmployeeDto> employees) {
+	public CompanyDto(long id, String registry, String name, String address) {
 		super();
 		this.id = id;
 		this.registry = registry;
 		this.name = name;
 		this.address = address;
-		//Employees = employees;
 	}
 	
 	public void addEmployeeDto(EmployeeDto employeeDto) {
-		Employees.add(employeeDto);
+		employees.add(employeeDto);
+	}
+	
+	public void delEmployeeDto(long id) {
+		EmployeeDto em = employees.stream().filter(e -> e.getId() == id).findFirst().get();
+		int index = employees.indexOf(em);
+		employees.remove(index);
 	}
 
 	public long getId() {
@@ -60,11 +74,11 @@ public class CompanyDto {
 	}
 
 	public List<EmployeeDto> getEmployees() {
-		return Employees;
+		return employees;
 	}
 
 	public void setEmployees(List<EmployeeDto> employees) {
-		Employees = employees;
+		this.employees = employees;
 	}
 	
 }
