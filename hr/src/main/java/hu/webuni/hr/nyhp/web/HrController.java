@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hu.webuni.hr.nyhp.dto.EmployeeDto;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.service.SalaryService;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -74,7 +76,7 @@ public class HrController {
 
 	@GetMapping("/salary")
 	public List<EmployeeDto> getListOfHigherSalary(@RequestParam("salary") int salary) {
-		//System.out.println(salary);
+		// System.out.println(salary);
 		return (new ArrayList<>(employees.values())).stream().filter(e -> e.getSalary() > salary)
 				.collect(Collectors.toList());
 	}
