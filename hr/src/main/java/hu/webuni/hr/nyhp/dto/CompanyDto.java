@@ -6,16 +6,16 @@ import java.util.List;
 import hu.webuni.hr.nyhp.model.Employee;
 
 public class CompanyDto {
-	
+
 	private long id;
-	private String registry; 
+	private String registry;
 	private String name;
 	private String address;
-	
+
 	private List<EmployeeDto> employees = new ArrayList<>();
-	
-	//special copy constructor
-	public CompanyDto(CompanyDto companyDto) { 
+
+	// special copy constructor
+	public CompanyDto(CompanyDto companyDto) {
 		this.id = companyDto.id;
 		this.registry = companyDto.registry;
 		this.name = companyDto.name;
@@ -30,15 +30,16 @@ public class CompanyDto {
 		this.name = name;
 		this.address = address;
 	}
-	
+
 	public void addEmployeeDto(EmployeeDto employeeDto) {
 		employees.add(employeeDto);
 	}
-	
+
 	public void delEmployeeDto(long id) {
-		EmployeeDto em = employees.stream().filter(e -> e.getId() == id).findFirst().get();
-		int index = employees.indexOf(em);
-		employees.remove(index);
+//		EmployeeDto em = employees.stream().filter(e -> e.getId() == id).findFirst().get();
+//		int index = employees.indexOf(em);
+//		employees.remove(index);
+		employees.removeIf(e -> e.getId() == id);
 	}
 
 	public long getId() {
@@ -80,5 +81,5 @@ public class CompanyDto {
 	public void setEmployees(List<EmployeeDto> employees) {
 		this.employees = employees;
 	}
-	
+
 }

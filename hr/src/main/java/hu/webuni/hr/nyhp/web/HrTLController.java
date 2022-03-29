@@ -21,11 +21,8 @@ public class HrTLController {
 	private List<Employee> allEmployees = new ArrayList<>();
 
 	{
-
-		// LocalDateTime ldt = LocalDateTime.of(2019, 9, 14, 0, 0, 0, 0);
 		Employee e1 = new Employee(333, "Peter", "Manager", 10000, LocalDateTime.of(2019, 9, 14, 0, 0, 0, 0));
 		allEmployees.add(e1);
-		// allEmployees.add(new Employee());
 	}
 
 	@GetMapping("/")
@@ -63,9 +60,10 @@ public class HrTLController {
 
 	@GetMapping("/employee")
 	public String deleteEmployee(Map<String, Object> model, @RequestParam int id) {
-		Employee em = allEmployees.stream().filter(e -> e.getId() == id).findAny().get();
-		int index = allEmployees.indexOf(em);
-		allEmployees.remove(index);
+//		Employee em = allEmployees.stream().filter(e -> e.getId() == id).findAny().get();
+//		int index = allEmployees.indexOf(em);
+//		allEmployees.remove(index);
+		allEmployees.removeIf(e -> e.getId() == id);
 		return "redirect:employees";
 	}
 }
