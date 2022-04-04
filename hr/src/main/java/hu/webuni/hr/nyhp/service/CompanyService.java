@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
 
+@Service
 public class CompanyService {
 	
 	private Map<Long, Company> companies = new HashMap<>();
