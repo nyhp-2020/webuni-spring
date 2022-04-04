@@ -10,6 +10,11 @@ import hu.webuni.hr.nyhp.service.SmartEmployeeService;
 @Configuration
 @Profile("smart")
 public class SmartConfiguration {
+//	@Bean
+//	public EmployeeServiceOld employeeService(){
+//		return new SmartEmployeeServiceOld();
+//	}
+	
 	@Bean
 	public EmployeeService employeeService(){
 		return new SmartEmployeeService();

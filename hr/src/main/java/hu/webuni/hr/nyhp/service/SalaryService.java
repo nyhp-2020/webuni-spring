@@ -7,9 +7,11 @@ import hu.webuni.hr.nyhp.model.Employee;
 @Service
 public class SalaryService {
 
-	private EmployeeService employeeservice;
+	//private EmployeeServiceOld employeeservice; //this was an interface
+	private EmployeeService employeeservice;	//this is an abstract class
 
-	public SalaryService(EmployeeService employeeService) {
+	//public SalaryService(EmployeeServiceOld employeeService) {
+	public SalaryService(EmployeeService employeeService) {	
 		// super();
 		this.employeeservice = employeeService;
 	}

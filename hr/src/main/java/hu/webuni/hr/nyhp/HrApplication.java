@@ -12,8 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import hu.webuni.hr.nyhp.model.Employee;
-import hu.webuni.hr.nyhp.service.DefaultEmployeeService;
-import hu.webuni.hr.nyhp.service.EmployeeService;
+import hu.webuni.hr.nyhp.service.DefaultEmployeeServiceOld;
+import hu.webuni.hr.nyhp.service.EmployeeServiceOld;
 import hu.webuni.hr.nyhp.service.SalaryService;
 
 @SpringBootApplication

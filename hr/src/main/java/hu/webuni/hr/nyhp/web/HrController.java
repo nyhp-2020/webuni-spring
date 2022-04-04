@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +26,8 @@ import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.service.SalaryService;
 
 @RestController
-@RequestMapping("/api/employees")
+//@RequestMapping("/api/employees")
+@RequestMapping("/api/hremployees")
 public class HrController {
 
 	private Map<Long, EmployeeDto> employees = new HashMap<>();
@@ -50,7 +53,7 @@ public class HrController {
 	}
 
 	@PostMapping
-	public EmployeeDto createEmployee(@RequestBody EmployeeDto employeeDto) {
+	public EmployeeDto createEmployee(@RequestBody @Valid EmployeeDto employeeDto) {
 		long id = employeeDto.getId();
 		if (!employees.containsKey(id)) {
 			employees.put(id, employeeDto);
@@ -60,7 +63,7 @@ public class HrController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id, @RequestBody EmployeeDto employeeDto) {
+	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id, @RequestBody @Valid EmployeeDto employeeDto) {
 		if (!employees.containsKey(id))
 			return ResponseEntity.notFound().build();
 

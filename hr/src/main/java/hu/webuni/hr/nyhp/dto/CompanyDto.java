@@ -13,6 +13,10 @@ public class CompanyDto {
 	private String address;
 
 	private List<EmployeeDto> employees = new ArrayList<>();
+	
+	public CompanyDto() {
+		
+	}
 
 	// special copy constructor
 	public CompanyDto(CompanyDto companyDto) {
@@ -23,12 +27,13 @@ public class CompanyDto {
 		this.employees = null;
 	}
 
-	public CompanyDto(long id, String registry, String name, String address) {
+	public CompanyDto(long id, String registry, String name, String address ,List<EmployeeDto> employees) {
 		super();
 		this.id = id;
 		this.registry = registry;
 		this.name = name;
 		this.address = address;
+		this.employees = employees;
 	}
 
 	public void addEmployeeDto(EmployeeDto employeeDto) {
