@@ -1,9 +1,20 @@
 package hu.webuni.airport.model;
 
 import javax.validation.constraints.Size;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
+//import org.hibernate.annotations.Entity;
+
+@Entity
+@NamedQuery(name="Airport.countByIata",query = "SELECT COUNT(a.id) from Airport a WHERE a.iata = :iata")
+@NamedQuery(name="Airport.countByIataAndIdNotIn",query = "SELECT COUNT(a.id) from Airport a WHERE a.iata = :iata AND a.id != :id")
 public class Airport {
 
+	@Id
+	@GeneratedValue //(strategy = )
 	private long id;
 	
 	@Size(min=3, max=20)
