@@ -44,6 +44,20 @@ public class EmployeeControllerIT {
 		assertThat(employeeDto2)
 		.usingRecursiveComparison()
 		.isEqualTo(employeeDtoAfter);
+		
+		ldt = LocalDateTime.of(2022, 3, 31, 0, 0, 0, 0);
+		EmployeeDto employeeDto3 = new EmployeeDto(1, "Peter Ny. H.", "Manager", 0, ldt);
+		modifyEmployeeWithInvalidData(employeeDto3);//salary should be positive
+	}
+
+	private void modifyEmployeeWithInvalidData(EmployeeDto employeeDto) {
+		webTestClient
+		.put()
+		.uri(BASE_URI+"/1")
+		.bodyValue(employeeDto)
+		.exchange()
+		.expectStatus()
+		.isBadRequest();
 	}
 
 	private EmployeeDto getEmployeeById() {
