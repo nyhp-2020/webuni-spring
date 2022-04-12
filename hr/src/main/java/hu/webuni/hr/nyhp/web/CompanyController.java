@@ -22,6 +22,7 @@ import hu.webuni.hr.nyhp.mapper.CompanyMapper;
 import hu.webuni.hr.nyhp.mapper.EmployeeMapper;
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.repository.CompanyRepository;
 import hu.webuni.hr.nyhp.service.CompanyService;
 
 @RestController
@@ -36,6 +37,55 @@ public class CompanyController {
 
 	@Autowired
 	EmployeeMapper employeeMapper;
+
+//	@Autowired
+//	CompanyRepository companyRepository;
+
+	@GetMapping("/{id}")
+	public CompanyDto getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
+		Company company = companyService.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		if (full)
+			return companyMapper.companyToDto(company);
+		else
+			return new CompanyDto(companyMapper.companyToDto(company)); // spec Copy Contructor
+
+	}
+
+	@PutMapping("/{id}")
+	public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto companyDto) {
+
+		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		companyDto.setId(id);
+		return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(companyDto)));
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteCompany(@PathVariable long id) {
+		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		companyService.delete(id);
+	}
+
+	@PostMapping("/employee")
+	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {
+		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Employee employee = companyService.addEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
+		return employeeMapper.employeeToDto(employee);
+	}
+
+	@DeleteMapping("/employee")
+	public void deleteEmployee(@RequestParam long coid, @RequestParam long emid) {
+		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		companyService.deleteEmployee(coid, emid);
+	}
+
+	@PutMapping("/employee")
+	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees, @RequestParam long coid) {
+		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		List<Employee> employeeList = companyService
+				.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees),coid);
+		return employeeMapper.employeesToDtos(employeeList);
+	}
 
 //	private Map<Long, CompanyDto> companies = new HashMap<>();
 //
@@ -66,18 +116,18 @@ public class CompanyController {
 
 	}
 
-	@GetMapping("/{id}")
-	public CompanyDto getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
-		Company company = companyService.findById(id);
-
-		if (company != null) {
-			if (full)
-				return companyMapper.companyToDto(company);
-			else
-				return new CompanyDto(companyMapper.companyToDto(company)); // spec Copy Contructor
-		} else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	}
+//	@GetMapping("/{id}")
+//	public CompanyDto getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
+//		Company company = companyService.findById(id);
+//
+//		if (company != null) {
+//			if (full)
+//				return companyMapper.companyToDto(company);
+//			else
+//				return new CompanyDto(companyMapper.companyToDto(company)); // spec Copy Contructor
+//		} else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//	}
 
 	@PostMapping
 	public CompanyDto createCompany(@RequestBody CompanyDto companyDto) {
@@ -85,63 +135,63 @@ public class CompanyController {
 		return companyMapper.companyToDto(company);
 	}
 
-	@PostMapping("/employee")
-	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {
+//	@PostMapping("/employee")
+//	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {
+//
+//		Company company = companyService.findById(coid);
+//
+//		if (company != null) {
+//			Employee employee = companyService.addEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
+//			return employeeMapper.employeeToDto(employee);
+//		} else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//
+//	}
 
-		Company company = companyService.findById(coid);
+//	@PutMapping("/{id}")
+//	public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto companyDto) {
+//
+//		Company company = companyService.findById(id);
+//
+//		if (company != null) {
+//			companyDto.setId(id);
+//			return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(companyDto)));
+//		} else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//
+//	}
 
-		if (company != null) {
-			Employee employee = companyService.addEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
-			return employeeMapper.employeeToDto(employee);
-		} else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//	@DeleteMapping("/{id}")
+//	public void deleteCompany(@PathVariable long id) {
+//		Company company = companyService.findById(id);
+//
+//		if (company != null)
+//			companyService.delete(id);
+//		else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//	}
 
-	}
+//	@DeleteMapping("/employee")
+//	public void deleteEmployee(@RequestParam long coid, @RequestParam long emid) {
+//		Company company = companyService.findById(coid);
+//
+//		if (company != null)
+//			companyService.deleteEmployee(coid, emid);
+//		else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//	}
 
-	@PutMapping("/{id}")
-	public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto companyDto) {
-
-		Company company = companyService.findById(id);
-
-		if (company != null) {
-			companyDto.setId(id);
-			return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(companyDto)));
-		} else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-	}
-
-	@DeleteMapping("/{id}")
-	public void deleteCompany(@PathVariable long id) {
-		Company company = companyService.findById(id);
-
-		if (company != null)
-			companyService.delete(id);
-		else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	}
-
-	@DeleteMapping("/employee")
-	public void deleteEmployee(@RequestParam long coid, @RequestParam long emid) {
-		Company company = companyService.findById(coid);
-
-		if (company != null)
-			companyService.deleteEmployee(coid, emid);
-		else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	}
-
-	@PutMapping("/employee")
-	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees, @RequestParam long coid) {
-		Company company = companyService.findById(coid);
-
-		if (company != null) {
-			List<Employee> employeeList = companyService
-					.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees), coid);
-			return employeeMapper.employeesToDtos(employeeList);
-		} else
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	}
+//	@PutMapping("/employee")
+//	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees, @RequestParam long coid) {
+//		Company company = companyService.findById(coid);
+//
+//		if (company != null) {
+//			List<Employee> employeeList = companyService
+//					.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees), coid);
+//			return employeeMapper.employeesToDtos(employeeList);
+//		} else
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//	}
 
 //	@GetMapping
 //	public List<CompanyDto> getAll(@RequestParam(required = false) boolean full) {

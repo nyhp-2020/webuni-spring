@@ -3,14 +3,21 @@ package hu.webuni.hr.nyhp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.webuni.hr.nyhp.dto.EmployeeDto;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class Company {
 
+	@Id
+	@GeneratedValue
 	private long id;
 	private String registry;
 	private String name;
 	private String address;
+	@OneToMany(mappedBy="company")
 	private List<Employee> employees = new ArrayList<>();
 	
 	public Company() {
