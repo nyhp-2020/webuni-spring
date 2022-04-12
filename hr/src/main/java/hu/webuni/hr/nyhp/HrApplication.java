@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.service.DefaultEmployeeServiceOld;
 import hu.webuni.hr.nyhp.service.EmployeeServiceOld;
+import hu.webuni.hr.nyhp.service.InitDbService;
 import hu.webuni.hr.nyhp.service.SalaryService;
 
 @SpringBootApplication
@@ -21,6 +22,9 @@ public class HrApplication implements CommandLineRunner {
 
 	@Autowired
 	SalaryService salaryservice;
+	
+	@Autowired
+	InitDbService initdbservice;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HrApplication.class, args);
@@ -46,7 +50,9 @@ public class HrApplication implements CommandLineRunner {
 
 		Duration d = Duration.between(ldt, LocalDateTime.now());
 		System.out.println(d.toDays() / 365.0);
-
+		
+		initdbservice.clearDB();
+		initdbservice.insertTestData();
 	}
 
 //	@Bean
