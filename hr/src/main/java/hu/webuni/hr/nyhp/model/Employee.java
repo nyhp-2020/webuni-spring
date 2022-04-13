@@ -1,6 +1,7 @@
 package hu.webuni.hr.nyhp.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,14 @@ public class Employee {
 		this.position = position;
 		this.salary = salary;
 		this.startd = startd;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 	public long getId() {
@@ -71,6 +80,23 @@ public class Employee {
 
 	public void setStartd(LocalDateTime startd) {
 		this.startd = startd;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		return id == other.id;
 	}
 
 	

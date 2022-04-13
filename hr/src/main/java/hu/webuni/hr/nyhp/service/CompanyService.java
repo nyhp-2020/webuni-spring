@@ -12,12 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.repository.CompanyRepository;
+import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 
 @Service
 public class CompanyService {
 	
 	@Autowired
 	CompanyRepository companyRepository;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
 	
 	public List<Company> findAll(){
 		return companyRepository.findAll();
@@ -38,17 +42,37 @@ public class CompanyService {
 	}
 	
 	public Employee addEmployee(Employee employee,long coid) {
-		companyRepository.findById(coid).get().addEmployee(employee);
-		return employee;
+		Company company = companyRepository.findById(coid).get();
+		company.addEmployee(employee);
+		return employeeRepository.save(employee);
+		//return employee;
 	}
 	
 	public void deleteEmployee(long coid, long emid) {
-		companyRepository.findById(coid).get().delEmployee(emid);
+		Company company = companyRepository.findById(coid).get();
+		Employee employee = employeeRepository.findById(emid).get();
+		employee.setCompany(null);
+		company.getEmployees().remove(employee);
+		employeeRepository.save(employee);
+		//companyRepository.findById(coid).get().delEmployee(emid);
 	}
 	
 	public List<Employee> changeEmployeeList(List<Employee> newemployees, long coid){
-		companyRepository.findById(coid).get().setEmployees(newemployees);
-		return newemployees;
+		Company company = companyRepository.findById(coid).get();
+		for(Employee employee:company.getEmployees()) {
+			employee.setCompany(null);
+		}
+		company.getEmployees().clear();
+		
+		for(Employee employee:newemployees) {
+			company.addEmployee(employee);
+			employeeRepository.save(employee);
+		}
+		
+		return company.getEmployees();
+		
+//		companyRepository.findById(coid).get().setEmployees(newemployees);
+//		return newemployees;
 	}
 	
 //	private Map<Long, Company> companies = new HashMap<>();
