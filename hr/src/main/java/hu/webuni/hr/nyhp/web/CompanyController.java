@@ -23,6 +23,7 @@ import hu.webuni.hr.nyhp.mapper.EmployeeMapper;
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.repository.CompanyRepository;
+import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 import hu.webuni.hr.nyhp.service.CompanyService;
 
 @RestController
@@ -38,8 +39,8 @@ public class CompanyController {
 	@Autowired
 	EmployeeMapper employeeMapper;
 
-//	@Autowired
-//	CompanyRepository companyRepository;
+	@Autowired
+	CompanyRepository companyRepository;
 
 	@GetMapping("/{id}")
 	public CompanyDto getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
@@ -82,8 +83,8 @@ public class CompanyController {
 	@PutMapping("/employee")
 	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees, @RequestParam long coid) {
 		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		List<Employee> employeeList = companyService
-				.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees),coid);
+		List<Employee> employeeList = companyService.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees),
+				coid);
 		return employeeMapper.employeesToDtos(employeeList);
 	}
 
@@ -116,6 +117,24 @@ public class CompanyController {
 
 	}
 
+	@PostMapping
+	public CompanyDto createCompany(@RequestBody CompanyDto companyDto) {
+		Company company = companyService.save(companyMapper.dtoToCompany(companyDto));
+		return companyMapper.companyToDto(company);
+	}
+
+	@GetMapping("/salary/{salary}")
+	public List<CompanyDto> getCompanyHaveEmployeeWithHigherSalary(@PathVariable int salary) {
+		List<Company> companies = companyRepository.getCompaniesHaveEmployeeWithHigherSalary(salary);
+		return companyMapper.companiesToDtos(companies);
+	}
+
+	@GetMapping("/count/{count}")
+	public List<CompanyDto> getCompaniesCountOfEmployeesHigher(@PathVariable int count) {
+		List<Company> companies = companyRepository.getCompaniesCountOfEmployeesHigher(count);
+		return companyMapper.companiesToDtos(companies);
+	}
+
 //	@GetMapping("/{id}")
 //	public CompanyDto getById(@PathVariable long id, @RequestParam(required = false) boolean full) {
 //		Company company = companyService.findById(id);
@@ -128,12 +147,6 @@ public class CompanyController {
 //		} else
 //			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //	}
-
-	@PostMapping
-	public CompanyDto createCompany(@RequestBody CompanyDto companyDto) {
-		Company company = companyService.save(companyMapper.dtoToCompany(companyDto));
-		return companyMapper.companyToDto(company);
-	}
 
 //	@PostMapping("/employee")
 //	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {

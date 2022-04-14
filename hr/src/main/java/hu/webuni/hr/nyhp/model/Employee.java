@@ -16,6 +16,8 @@ public class Employee {
 	private long id;
 	private String name;
 	private String position;
+	@ManyToOne
+	private Position pos;
 	private int salary;
 	private LocalDateTime startd;
 	@ManyToOne

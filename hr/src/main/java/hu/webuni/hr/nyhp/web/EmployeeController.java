@@ -6,7 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,6 +122,13 @@ public class EmployeeController {
 			LocalDateTime dat2 ) {
 		
 		return employeeMapper.employeesToDtos(employeeRepository.findByStartdBetween(dat1, dat2));
+	}
+	
+	@GetMapping("/avg/{id}")
+	public List<Object> getAvgSalaryOfCompanyGroupedByPosition(@PathVariable long id) {
+		List<Object> results = employeeRepository.getAvgSalaryOfCompanyGroupedByPosition(id);
+		System.out.println(results);
+		return results;
 	}
 
 }
