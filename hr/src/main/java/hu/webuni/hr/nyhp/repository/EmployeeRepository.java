@@ -18,5 +18,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	List<Employee> findByStartdBetween(LocalDateTime d1, LocalDateTime d2);
 
 	@Query("SELECT e.position, AVG(e.salary) AS avgsalary FROM Employee e WHERE e.company.id = :id GROUP BY e.position ORDER BY avgsalary DESC")
-	List<Object> getAvgSalaryOfCompanyGroupedByPosition(long id);
+	List<Object[]> getAvgSalaryOfCompanyGroupedByPosition(long id);
 }

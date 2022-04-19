@@ -124,10 +124,9 @@ public class EmployeeController {
 		return employeeMapper.employeesToDtos(employeeRepository.findByStartdBetween(dat1, dat2));
 	}
 	
-	@GetMapping("/avg/{id}")
-	public List<Object> getAvgSalaryOfCompanyGroupedByPosition(@PathVariable long id) {
-		List<Object> results = employeeRepository.getAvgSalaryOfCompanyGroupedByPosition(id);
-		System.out.println(results);
+	@GetMapping("/avg/{coid}")
+	public List<Object[]> getAvgSalaryOfCompanyGroupedByPosition(@PathVariable long coid) {
+		List<Object[]> results = employeeRepository.getAvgSalaryOfCompanyGroupedByPosition(coid);
 		return results;
 	}
 

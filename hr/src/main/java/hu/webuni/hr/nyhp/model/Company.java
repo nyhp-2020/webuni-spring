@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
@@ -23,7 +24,10 @@ public class Company {
 	private String name;
 	private String address;
 	
-	private CompanyType type;
+	private CompanyType type; //enum
+	
+	@ManyToOne
+	private Comptype cotp;   //entity
 	
 	// @OneToMany(mappedBy="company", cascade = {CascadeType.PERSIST})
 	@OneToMany(mappedBy = "company")
