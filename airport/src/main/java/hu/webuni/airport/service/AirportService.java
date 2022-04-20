@@ -100,12 +100,12 @@ public class AirportService {
 	}
 
 	@Transactional
-	public void createFlight() {
+	public Flight createFlight(String flightNumber, long takeoffAirportId, long landingAirportId, LocalDateTime takeoffDateTime) {
 		Flight flight = new Flight();
-		flight.setFlightNumber("ztertze");
-		flight.setTakeoff(airportRepository.findById(1L).get());
-		flight.setLanding(airportRepository.findById(3L).get());
-		flight.setTakeoffTime(LocalDateTime.of(2021, 4, 10, 10, 0, 0));
-		flightRepository.save(flight);
+		flight.setFlightNumber(flightNumber);
+		flight.setTakeoff(airportRepository.findById(takeoffAirportId).get());
+		flight.setLanding(airportRepository.findById(landingAirportId).get());
+		flight.setTakeoffTime(takeoffDateTime);
+		return flightRepository.save(flight);
 	}
 }
