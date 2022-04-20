@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
-import hu.webuni.hr.nyhp.enums.CompanyType;
+import hu.webuni.hr.nyhp.enums.CompanyTypeEnum;
 
 @Entity
 public class Company {
@@ -24,10 +24,10 @@ public class Company {
 	private String name;
 	private String address;
 	
-	private CompanyType type; //enum
+//	private CompanyTypeEnum type; //enum
 	
 	@ManyToOne
-	private Comptype cotp;   //entity
+	private CompanyType type;   //entity
 	
 	// @OneToMany(mappedBy="company", cascade = {CascadeType.PERSIST})
 	@OneToMany(mappedBy = "company")
@@ -47,14 +47,14 @@ public class Company {
 		this.employees = employees;
 	}
 
-	public Company(long id, String registry, String name, String address, List<Employee> employees) {
-		super();
-		this.id = id;
-		this.registry = registry;
-		this.name = name;
-		this.address = address;
-		this.employees = employees;
-	}
+//	public Company(long id, String registry, String name, String address, List<Employee> employees) {
+//		super();
+//		this.id = id;
+//		this.registry = registry;
+//		this.name = name;
+//		this.address = address;
+//		this.employees = employees;
+//	}
 
 	public CompanyType getType() {
 		return type;

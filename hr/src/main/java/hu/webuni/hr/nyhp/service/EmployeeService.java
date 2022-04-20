@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,13 +53,26 @@ public abstract class EmployeeService {
 		employeeRepository.deleteById(id);
 	}
 
-	public List<Employee> findOfHigherSalary(int salary) {
+	public List<Employee> findOfHigherSalary(int salary, Pageable pageable) {
 //		return (new ArrayList<>(employees.values())).stream().filter(e -> e.getSalary() > salary)
 //				.collect(Collectors.toList());
 		//return employeeRepository.selectWhenSalaryBiggerThan(salary);
-		return employeeRepository.findBySalaryGreaterThan(salary);
+		
+		//return employeeRepository.findBySalaryGreaterThan(salary);
+		Page<Employee> page= employeeRepository.findBySalaryGreaterThan(salary, pageable);
+		List<Employee> employees = page.getContent();
+		
+		System.out.println(page.getTotalElements());
+		System.out.println(page.getTotalPages());
+		System.out.println(page.getSize());
+		System.out.println(page.isFirst());
+		System.out.println(page.isLast());
+		System.out.println(page.hasNext());
+		System.out.println(page.hasPrevious());
+		
+		return employees;
 	}
 
 	public abstract int getPayRaisePercent(Employee employee);
-
+	
 }

@@ -100,13 +100,15 @@ public class CompanyController {
 //		companies.put(1L, companyDto);
 //	}
 
+	//spring.jpa.open-in-view=false
 	@GetMapping
 	public List<CompanyDto> getAll(@RequestParam(required = false) boolean full) {
-		List<Company> companies = companyService.findAll();
+		//List<Company> companies = companyService.findAll();
+		List<Company> companies = companyRepository.findAllWithEmployees();
 
-		if (full)
+		if (full) {
 			return companyMapper.companiesToDtos(companies);
-		else {
+		} else {
 			List<CompanyDto> compDtoList = new ArrayList<>();
 			for (Company company : companies) {
 				CompanyDto newcoDto = new CompanyDto(companyMapper.companyToDto(company)); // special copy constructor
@@ -114,8 +116,25 @@ public class CompanyController {
 			}
 			return compDtoList;
 		}
-
 	}
+	
+	//spring.jpa.open-in-view=true
+//	@GetMapping
+//	public List<CompanyDto> getAll(@RequestParam(required = false) boolean full) {
+//		List<Company> companies = companyService.findAll();
+//
+//		if (full)
+//			return companyMapper.companiesToDtos(companies);
+//		else {
+//			List<CompanyDto> compDtoList = new ArrayList<>();
+//			for (Company company : companies) {
+//				CompanyDto newcoDto = new CompanyDto(companyMapper.companyToDto(company)); // special copy constructor
+//				compDtoList.add(newcoDto);
+//			}
+//			return compDtoList;
+//		}
+//
+//	}
 
 	@PostMapping
 	public CompanyDto createCompany(@RequestBody CompanyDto companyDto) {

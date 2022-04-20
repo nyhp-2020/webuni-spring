@@ -3,13 +3,17 @@ package hu.webuni.hr.nyhp.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import hu.webuni.hr.nyhp.model.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-	List<Employee> findBySalaryGreaterThan(int salary);
+//	List<Employee> findBySalaryGreaterThan(int salary);
+	
+	Page<Employee> findBySalaryGreaterThan(int salary, Pageable pageable);
 
 	List<Employee> findByPositionLike(String position);
 

@@ -22,9 +22,21 @@ public class Employee {
 	private LocalDateTime startd;
 	@ManyToOne
 	private Company company;
-	
+
 	public Employee() {
-		
+
+	}
+
+	public Employee(long id, String name, String position, Position pos, int salary, LocalDateTime startd,
+			Company company) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.position = position;
+		this.pos = pos;
+		this.salary = salary;
+		this.startd = startd;
+		this.company = company;
 	}
 
 	public Employee(long id, String name, String position, int salary, LocalDateTime startd) {
@@ -68,6 +80,16 @@ public class Employee {
 		this.position = position;
 	}
 
+	public Position getPos() {
+		return pos;
+	}
+
+	public void setPos(Position pos) {
+		this.pos = pos;
+		if (pos != null)
+			this.position = pos.getName();
+	}
+
 	public int getSalary() {
 		return salary;
 	}
@@ -101,5 +123,4 @@ public class Employee {
 		return id == other.id;
 	}
 
-	
 }
