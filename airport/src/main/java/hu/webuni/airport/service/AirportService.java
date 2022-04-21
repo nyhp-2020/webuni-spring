@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import hu.webuni.airport.model.Airport;
 import hu.webuni.airport.model.Flight;
@@ -107,5 +110,33 @@ public class AirportService {
 		flight.setLanding(airportRepository.findById(landingAirportId).get());
 		flight.setTakeoffTime(takeoffDateTime);
 		return flightRepository.save(flight);
+	}
+	
+	public List<Flight> findFlightsByExample(Flight example){
+		
+		long id = example.getId();
+		String flightNumber = example.getFlightNumber();
+		String takeoffIata = null;
+		Airport takeoff = example.getTakeoff();
+		if(takeoff != null)
+			takeoffIata = takeoff.getIata();
+		LocalDateTime takeoffTime = example.getTakeoffTime();
+		
+		Specification<Flight> spec = Specification.where(null);
+		
+		if(id > 0) {
+			spec = spec.and(FlightSpecifications.hasId(id));
+		}
+		
+		if(StringUtils.hasText(flightNumber))
+			spec = spec.and(FlightSpecifications.hasFlightNumber(flightNumber));
+	
+		if(StringUtils.hasText(takeoffIata))
+			spec = spec.and(FlightSpecifications.hasTakeoffIata(takeoffIata));
+		
+		if(takeoffTime != null)
+			spec = spec.and(FlightSpecifications.hasTakeoffTime(takeoffTime));
+		
+		return flightRepository.findAll(spec, Sort.by("id"));
 	}
 }
