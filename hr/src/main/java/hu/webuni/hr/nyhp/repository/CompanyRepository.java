@@ -2,6 +2,7 @@ package hu.webuni.hr.nyhp.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,7 +20,10 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 	List<Company> getCompaniesCountOfEmployeesHigher(long count);
 
 	//spring.jpa.open-in-view=false
-	@Query("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.employees")
+	//@Query("SELECT DISTINCT c FROM Company c LEFT JOIN FETCH c.employees")
+	//@EntityGraph(attributePaths = "employees")
+	@EntityGraph("Company.full") //Defined in Company class
+	@Query("SELECT DISTINCT c FROM Company c") 
 	public List<Company> findAllWithEmployees();
 
 }

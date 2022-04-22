@@ -9,11 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 import hu.webuni.hr.nyhp.enums.CompanyTypeEnum;
 
+@NamedEntityGraph(name = "Company.full",
+attributeNodes =@NamedAttributeNode("employees"))
 @Entity
 public class Company {
 
