@@ -1,6 +1,7 @@
 package hu.webuni.hr.nyhp.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,10 @@ import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
+	
+	@EntityGraph(attributePaths = "employees")
+	Optional<Company> findById(long id);
+	
 	///@Query("SELECT DISTINCT c FROM Company c JOIN c.employees e WHERE e.salary > :minSalary")
 	@Query("Select c FROM Company c join c.employees e where e.salary > :salary")
 	List<Company> getCompaniesHaveEmployeeWithHigherSalary(int salary);
