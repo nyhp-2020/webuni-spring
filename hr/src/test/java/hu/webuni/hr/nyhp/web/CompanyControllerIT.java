@@ -24,6 +24,8 @@ public class CompanyControllerIT {
 
 	List<CompanyDto> companies = new ArrayList<>();
 	List<EmployeeDto> employees = new ArrayList<>();
+	
+	EmployeeDto employeeDto;
 
 	@Autowired
 	WebTestClient webTestClient;
@@ -31,30 +33,41 @@ public class CompanyControllerIT {
 	@Test
 	void testDeleteEmployee() throws Exception {
 		companies = getAllCompanies();
-		for(CompanyDto company:companies)
-			System.out.println(company.getId());
-			
 			
 		long companyId = companies.get(0).getId();
-		//System.out.println(companyId);
 		List<EmployeeDto> employeesOfCompany = companies.get(0).getEmployees();
 		int en1 = employeesOfCompany.size();
-		System.out.println(en1);
-		long employeeId = employeesOfCompany.get(0).getId();
-		//System.out.println(employeeId);
+		employeeDto = employeesOfCompany.get(0);
+		long employeeId = employeeDto.getId();
+
 		deleteEmployee(companyId, employeeId);
 
 		CompanyDto company2 = getById(companyId);
 		int en2 = company2.getEmployees().size();
-		
+	
 		assertThat(en1-1 == en2);
 
 	}
 
-//	@Test
-//	void testAddNewEmployee() throws Exception {
-//
-//	}
+	@Test
+	void testAddNewEmployee() throws Exception {
+		companies = getAllCompanies();
+		long companyId = companies.get(1).getId();
+		//List<EmployeeDto> employeesOfCompany = companies.get(1).getEmployees();
+		
+		CompanyDto company1 = getById(companyId);
+		int size1 = company1.getEmployees().size();
+		
+		EmployeeDto emp = addEmployee(employeeDto, companyId);
+		
+		CompanyDto company2 = getById(companyId);
+		int size2 = company2.getEmployees().size();
+
+		assertThat(size1 + 1 == size2);
+	}
+
+
+
 //
 //	@Test
 //	void testChangeEmployeeList() throws Exception {
@@ -76,7 +89,7 @@ public class CompanyControllerIT {
 	}
 
 	private void deleteEmployee(long companyId, long employeeId) {
-		webTestClient.get()
+		webTestClient.delete()
 		.uri(BASE_URI + "/employee" + "?coid="
 		+ companyId 
 		+ "&emid=" + employeeId)
@@ -87,11 +100,24 @@ public class CompanyControllerIT {
 
 	private CompanyDto getById(long companyId) {
 		return webTestClient.get()
-		.uri(BASE_URI +"/" + companyId)
+		.uri(BASE_URI +"/" + companyId+"?full=true")
 		.exchange()
 		.expectStatus()
 		.isOk()
 		.expectBody(CompanyDto.class)
+		.returnResult()
+		.getResponseBody();	
+	}
+	
+	private EmployeeDto addEmployee(EmployeeDto empDto, long companyId) {
+		return webTestClient
+		.post()
+		.uri(BASE_URI + "/employee" + "?coid=" + companyId)
+		.bodyValue(empDto)
+		.exchange()
+		.expectStatus()
+		.isOk()
+		.expectBody(EmployeeDto.class)
 		.returnResult()
 		.getResponseBody();	
 	}
