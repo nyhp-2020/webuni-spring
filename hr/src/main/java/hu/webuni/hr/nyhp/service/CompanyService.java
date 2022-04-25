@@ -38,6 +38,11 @@ public class CompanyService {
 	
 	@Transactional
 	public void delete(long id) {
+		Company company = companyRepository.findById(id).get();
+		for(Employee employee:company.getEmployees()) {
+			employee.setCompany(null);
+			employeeRepository.save(employee);
+		}
 		companyRepository.deleteById(id);
 	}
 	
@@ -76,10 +81,10 @@ public class CompanyService {
 		//companyRepository.save(company);
 		
 		//return company.getEmployees();
-		return companyRepository.findById(coid).get().getEmployees();
+		//return companyRepository.findById(coid).get().getEmployees();
 		
 //		companyRepository.findById(coid).get().setEmployees(newemployees);
-//		return newemployees;
+		return newemployees;
 	}
 	
 //	private Map<Long, Company> companies = new HashMap<>();
