@@ -1,8 +1,10 @@
 package hu.webuni.hr.nyhp.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import hu.webuni.hr.nyhp.dto.EmployeeDto;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.service.EmployeeService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT) //Start Tomcat on a random port
 public class EmployeeControllerIT {
@@ -21,6 +24,9 @@ public class EmployeeControllerIT {
 
 	@Autowired
 	WebTestClient webTestClient;
+	
+	@Autowired
+	EmployeeService employeeService;
 
 	@Test
 	void testModifyEmployee() throws Exception {
@@ -48,6 +54,15 @@ public class EmployeeControllerIT {
 		ldt = LocalDateTime.of(2022, 3, 31, 0, 0, 0, 0);
 		EmployeeDto employeeDto3 = new EmployeeDto(1, "Peter Ny. H.", "Manager", 0, ldt);
 		modifyEmployeeWithInvalidData(employeeDto3);//salary should be positive
+	}
+	
+	@Test
+	void testFindEmployeesByExample() throws Exception {
+		
+		Employee example = new Employee();
+		
+		List<Employee> foundEmployees = employeeService.findEmployeeByExample(example);
+		assertThat(getClass());
 	}
 
 	private void modifyEmployeeWithInvalidData(EmployeeDto employeeDto) {

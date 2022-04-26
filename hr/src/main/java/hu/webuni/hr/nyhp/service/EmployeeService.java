@@ -1,15 +1,21 @@
 package hu.webuni.hr.nyhp.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.model.Position;
 import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 
 @Service
@@ -71,6 +77,44 @@ public abstract class EmployeeService {
 		System.out.println(page.hasPrevious());
 		
 		return employees;
+	}
+	
+	public List<Employee> findEmployeeByExample(Employee example){
+		
+		long id = example.getId();
+		String name = example.getName();
+		Position pos = example.getPos();
+		int salary = example.getSalary();
+		LocalDateTime startd = example.getStartd() ;
+		Company company = example.getCompany();
+		
+		Specification<Employee> spec = Specification.where(null);
+		
+		if(id > 0) {
+			spec = spec.and(EmployeeSpecifications.hasId(id));
+		}
+		
+		if(StringUtils.hasText(name)) {
+			spec = spec.and(EmployeeSpecifications.hasName(name));
+		}
+		
+		if(pos != null) {
+			spec = spec.and(EmployeeSpecifications.hasPos(pos));
+		}
+		
+		if(salary > 0) {
+			spec = spec.and(EmployeeSpecifications.hasSalary(salary));
+		}
+		
+		if(startd != null) {
+			spec = spec.and(EmployeeSpecifications.hasStartd(startd));
+		}
+		
+		if(company != null) {
+			spec = spec.and(EmployeeSpecifications.hasCompany(company));
+		}
+			
+		return employeeRepository.findAll(spec, Sort.by("id"));
 	}
 
 	public abstract int getPayRaisePercent(Employee employee);
