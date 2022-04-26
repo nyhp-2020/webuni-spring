@@ -21,6 +21,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
 	List<Employee> findByStartdBetween(LocalDateTime d1, LocalDateTime d2);
 	
+	List<Employee> findByCompanyIsNull();
+	
 ///	@Query("SELECT e.position.name AS position, avg(e.salary) AS averageSalary "
 //			+ "FROM Company c "
 //			+ "INNER JOIN c.employees e "
