@@ -1,7 +1,6 @@
 package hu.webuni.hr.nyhp.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import hu.webuni.hr.nyhp.dto.EmployeeDto;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.repository.EmployeeRepository;
+import hu.webuni.hr.nyhp.repository.PositionRepository;
 import hu.webuni.hr.nyhp.service.EmployeeService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT) //Start Tomcat on a random port
@@ -27,6 +28,12 @@ public class EmployeeControllerIT {
 	
 	@Autowired
 	EmployeeService employeeService;
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+//	@Autowired
+//	PositionRepository positionRepository;
 
 	@Test
 	void testModifyEmployee() throws Exception {
@@ -56,14 +63,24 @@ public class EmployeeControllerIT {
 		modifyEmployeeWithInvalidData(employeeDto3);//salary should be positive
 	}
 	
-	@Test
-	void testFindEmployeesByExample() throws Exception {
-		
-		Employee example = new Employee();
-		
-		List<Employee> foundEmployees = employeeService.findEmployeeByExample(example);
-		assertThat(getClass());
-	}
+//	@Test
+//	void testFindEmployeesByExample() throws Exception {
+//		
+//		//Employee example = new Employee();
+//		
+//		List<Employee> employees = employeeRepository.findAll();
+//		
+//		Employee example = employees.get(0);
+//		
+//		//List<Position> positions = positionRepository.findByName("Manager");
+//		//Position pos = positions.get(0);
+//		//pos.addEmployee(example);
+//		//example.setPos(pos);
+//		//positionRepository.save(pos);
+//		System.out.println(example.getId());
+//		//List<Employee> foundEmployees = employeeService.findEmployeeByExample(example);
+//		assertThat(getClass());
+//	}
 
 	private void modifyEmployeeWithInvalidData(EmployeeDto employeeDto) {
 		webTestClient
