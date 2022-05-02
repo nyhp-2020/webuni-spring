@@ -6,6 +6,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 
+import hu.webuni.hr.nyhp.model.Company;
+import hu.webuni.hr.nyhp.model.Position;
+
 public class EmployeeDto {
 
 	private long id;
@@ -13,10 +16,16 @@ public class EmployeeDto {
 	private String name;
 	@NotEmpty
 	private String position;
+	
+	//private PositionDto pos;
+	
 	@Min(1)
 	private int salary;
 	@Past
 	private LocalDateTime startd;
+	
+	//private CompanyDto company;
+	private String companyName;
 
 	public EmployeeDto() {
 	}
@@ -69,5 +78,31 @@ public class EmployeeDto {
 	public void setStartd(LocalDateTime startd) {
 		this.startd = startd;
 	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	
+	
+
+//	public PositionDto getPos() {
+//		return pos;
+//	}
+//
+//	public void setPos(PositionDto pos) {
+//		this.pos = pos;
+//	}
+//
+//	public CompanyDto getCompany() {
+//		return company;
+//	}
+//
+//	public void setCompany(CompanyDto company) {
+//		this.company = company;
+//	}
 
 }
