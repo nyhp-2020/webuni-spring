@@ -6,8 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
@@ -22,6 +24,30 @@ public class CompanyService {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Transactional
+	public Company modifyCompany(long id, Company company) {
+		findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		company.setId(id);
+		return save(company);
+	}
+	
+	@Transactional
+	public void deleteCompany(long id) {
+		findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		delete(id);
+	}
+	
+	@Transactional
+	public Employee addNewEmployee(Employee employee, long coid) {
+		findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		return addEmployee(employee, coid);
+	}
+	
+//	public void deleteEmployee(long coid, long emid) {
+//		findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		deleteEmployee(coid, emid);
+//	}
 	
 	public List<Company> findAll(){
 		return companyRepository.findAll();
@@ -56,6 +82,7 @@ public class CompanyService {
 	
 	@Transactional
 	public void deleteEmployee(long coid, long emid) {
+		findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		Company company = companyRepository.findById(coid).get();
 		Employee employee = employeeRepository.findById(emid).get();
 		employee.setCompany(null);
@@ -66,6 +93,7 @@ public class CompanyService {
 	
 	@Transactional
 	public List<Employee> changeEmployeeList(List<Employee> newemployees, long coid){
+		findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		Company company = companyRepository.findById(coid).get();
 		for(Employee employee:company.getEmployees()) {
 			employee.setCompany(null);

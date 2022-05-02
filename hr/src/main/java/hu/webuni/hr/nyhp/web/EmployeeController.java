@@ -73,10 +73,13 @@ public class EmployeeController {
 
 	@PutMapping("/{id}")
 	public EmployeeDto modifyEmployee(@PathVariable long id, @RequestBody @Valid EmployeeDto employeeDto) {
-		Employee employee = employeeService.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-				employeeDto.setId(id);
-				return employeeMapper.employeeToDto(employeeService.save(employeeMapper.dtoToEmployee(employeeDto)));
+		
+		return employeeMapper.employeeToDto(employeeService.modifyEmployee(id,employeeMapper.dtoToEmployee(employeeDto)));
+		
+//		Employee employee = employeeService.findById(id)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//				employeeDto.setId(id);
+//				return employeeMapper.employeeToDto(employeeService.save(employeeMapper.dtoToEmployee(employeeDto)));
 
 //		if (employee != null) {
 //			employeeDto.setId(id);
@@ -87,9 +90,13 @@ public class EmployeeController {
 
 	@DeleteMapping("/{id}")
 	public void deleteEmployee(@PathVariable long id) {
-		Employee employee = employeeService.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		employeeService.delete(id);
+		
+		employeeService.deleteById(id);
+		
+//		Employee employee = employeeService.findById(id)
+//				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		employeeService.delete(id);
+		
 //		if (employee != null)
 //			employeeService.delete(id);
 //		else

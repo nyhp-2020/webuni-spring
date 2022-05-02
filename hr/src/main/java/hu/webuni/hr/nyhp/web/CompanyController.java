@@ -55,34 +55,38 @@ public class CompanyController {
 
 	@PutMapping("/{id}")
 	public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto companyDto) {
+		return companyMapper.companyToDto(companyService.modifyCompany(id,companyMapper.dtoToCompany(companyDto)));
 
-		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		companyDto.setId(id);
-		return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(companyDto)));
+//		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		companyDto.setId(id);
+//		return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(companyDto)));
 	}
 
 	@DeleteMapping("/{id}")
 	public void deleteCompany(@PathVariable long id) {
-		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		companyService.delete(id);
+		companyService.deleteCompany(id);
+//		companyService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		companyService.delete(id);
 	}
 
 	@PostMapping("/employee")
 	public EmployeeDto addNewEmployee(@RequestBody EmployeeDto employeeDto, @RequestParam long coid) {
-		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		Employee employee = companyService.addEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
+		Employee employee = companyService.addNewEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
 		return employeeMapper.employeeToDto(employee);
+//		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		Employee employee = companyService.addEmployee(employeeMapper.dtoToEmployee(employeeDto), coid);
+//		return employeeMapper.employeeToDto(employee);
 	}
 
 	@DeleteMapping("/employee")
 	public void deleteEmployee(@RequestParam long coid, @RequestParam long emid) {
-		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		companyService.deleteEmployee(coid, emid);
 	}
 
 	@PutMapping("/employee")
 	public List<EmployeeDto> changeEmployeeList(@RequestBody List<EmployeeDto> newemployees, @RequestParam long coid) {
-		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		companyService.findById(coid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		List<Employee> employeeList = companyService.changeEmployeeList(employeeMapper.dtosToEmployees(newemployees),
 				coid);
 		return employeeMapper.employeesToDtos(employeeList);

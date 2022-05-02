@@ -9,9 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
@@ -30,6 +32,22 @@ public abstract class EmployeeService {
 //	}
 
 //	private Map<Long, Employee> employees = new HashMap<>();
+	
+	
+	@Transactional
+	public Employee modifyEmployee(long id, Employee employee) {
+		Employee emp = findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		employee.setId(id);
+		return save(employee);	
+	}
+	
+	@Transactional
+	public void deleteById(long id) {
+		Employee employee = findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		delete(id);
+	}
 
 	public List<Employee> findAll() {
 //		return new ArrayList<>(employees.values());
