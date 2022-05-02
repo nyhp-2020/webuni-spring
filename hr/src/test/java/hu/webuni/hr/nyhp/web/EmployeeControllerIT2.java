@@ -70,16 +70,27 @@ public class EmployeeControllerIT2 {
 		
 		List<Employee> employees = employeeRepository.findAll();
 		
-		Employee example = employees.get(1);
+		Employee example = employees.get(2);
+		long id = example.getId();
+		System.out.println(id);
+//		example.setId(0);
+//		//example.setName("TES");
+//		example.setName(null);
+//		example.setPos(null);
+//		example.setSalary(0);
+//		example.setStartd(null);
+//		example.setCompany(null);
+		
 		
 		//List<Position> positions = positionRepository.findByName("Manager");
 		//Position pos = positions.get(0);
 		//pos.addEmployee(example);
 		//example.setPos(pos);
 		//positionRepository.save(pos);
-		//System.out.println(example.getId());
+
 		List<Employee> foundEmployees = employeeService.findEmployeeByExample(example);
-		assertThat(getClass());
+		System.out.println(foundEmployees.size());
+		assertThat(foundEmployees.get(0).getId()).isEqualTo(id);
 	}
 
 //	private void modifyEmployeeWithInvalidData(EmployeeDto employeeDto) {

@@ -1,15 +1,16 @@
 package hu.webuni.hr.nyhp.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import hu.webuni.hr.nyhp.model.Company;
+import hu.webuni.hr.nyhp.model.Company_;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.model.Employee_;
 import hu.webuni.hr.nyhp.model.Position;
+import hu.webuni.hr.nyhp.model.Position_;
 
 public class EmployeeSpecifications {
 
@@ -18,11 +19,12 @@ public class EmployeeSpecifications {
 	}
 
 	public static Specification<Employee> hasName(String name) {
-		return (root, cq, cb) -> cb.like(root.get(Employee_.name), name + "%");
+		return (root, cq, cb) -> cb.like(cb.upper(root.get(Employee_.name)), name.toUpperCase() + "%");
+		//return (root, cq, cb) -> cb.like(root.get(Employee_.name), name + "%");
 	}
 
 	public static Specification<Employee> hasPos(Position pos) {
-		return (root, cq, cb) -> cb.equal(root.get(Employee_.pos.getName()), pos.getName());
+		return (root, cq, cb) -> cb.equal(root.get(Employee_.pos).get(Position_.name), pos.getName());
 	}
 
 	public static Specification<Employee> hasSalary(int salary) {
@@ -39,7 +41,8 @@ public class EmployeeSpecifications {
 	}
 	
 	public static Specification<Employee> hasCompany(Company company) {
-		return (root, cq, cb) -> cb.like(root.get(Employee_.company.getName()), company.getName() + "%");
+		return (root, cq, cb) -> cb.like(cb.lower(root.get(Employee_.company).get(Company_.name)), company.getName().toLowerCase()+ "%");
+		//return (root, cq, cb) -> cb.like(root.get(Employee_.company).get(Company_.name), company.getName()+ "%");
 	}
 
 }
