@@ -22,7 +22,7 @@ import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 
 @Service
 public abstract class EmployeeService {
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
 
@@ -32,20 +32,17 @@ public abstract class EmployeeService {
 //	}
 
 //	private Map<Long, Employee> employees = new HashMap<>();
-	
-	
+
 	@Transactional
 	public Employee modifyEmployee(long id, Employee employee) {
-		Employee emp = findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Employee emp = findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		employee.setId(id);
-		return save(employee);	
+		return save(employee);
 	}
-	
+
 	@Transactional
 	public void deleteById(long id) {
-		Employee employee = findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		Employee employee = findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		delete(id);
 	}
 
@@ -80,12 +77,12 @@ public abstract class EmployeeService {
 	public List<Employee> findOfHigherSalary(int salary, Pageable pageable) {
 //		return (new ArrayList<>(employees.values())).stream().filter(e -> e.getSalary() > salary)
 //				.collect(Collectors.toList());
-		//return employeeRepository.selectWhenSalaryBiggerThan(salary);
-		
-		//return employeeRepository.findBySalaryGreaterThan(salary);
-		Page<Employee> page= employeeRepository.findBySalaryGreaterThan(salary, pageable);
+		// return employeeRepository.selectWhenSalaryBiggerThan(salary);
+
+		// return employeeRepository.findBySalaryGreaterThan(salary);
+		Page<Employee> page = employeeRepository.findBySalaryGreaterThan(salary, pageable);
 		List<Employee> employees = page.getContent();
-		
+
 		System.out.println(page.getTotalElements());
 		System.out.println(page.getTotalPages());
 		System.out.println(page.getSize());
@@ -93,48 +90,48 @@ public abstract class EmployeeService {
 		System.out.println(page.isLast());
 		System.out.println(page.hasNext());
 		System.out.println(page.hasPrevious());
-		
+
 		return employees;
 	}
-	
-	public List<Employee> findEmployeeByExample(Employee example){
-		
+
+	public List<Employee> findEmployeeByExample(Employee example) {
+
 		long id = example.getId();
 		String name = example.getName();
 		Position pos = example.getPos();
 		int salary = example.getSalary();
-		LocalDateTime startd = example.getStartd() ;
+		LocalDateTime startd = example.getStartd();
 		Company company = example.getCompany();
-		
+
 		Specification<Employee> spec = Specification.where(null);
-		
-		if(id > 0) {
+
+		if (id > 0) {
 			spec = spec.and(EmployeeSpecifications.hasId(id));
 		}
-		
-		if(StringUtils.hasText(name)) {
+
+		if (StringUtils.hasText(name)) {
 			spec = spec.and(EmployeeSpecifications.hasName(name));
 		}
-		
-		if(pos != null) {
+
+		if (pos != null && pos.getName() != null && !pos.getName().equals("")) {
 			spec = spec.and(EmployeeSpecifications.hasPos(pos));
 		}
-		
-		if(salary > 0) {
+
+		if (salary > 0) {
 			spec = spec.and(EmployeeSpecifications.hasSalary(salary));
 		}
-		
-		if(startd != null) {
+
+		if (startd != null) {
 			spec = spec.and(EmployeeSpecifications.hasStartd(startd));
 		}
-		
-		if(company != null) {
+
+		if (company != null && company.getName() != null && !company.getName().equals("")) {
 			spec = spec.and(EmployeeSpecifications.hasCompany(company));
 		}
-			
+
 		return employeeRepository.findAll(spec, Sort.by("id"));
 	}
 
 	public abstract int getPayRaisePercent(Employee employee);
-	
+
 }

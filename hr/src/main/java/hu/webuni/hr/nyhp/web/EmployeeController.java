@@ -138,15 +138,9 @@ public class EmployeeController {
 		return results;
 	}
 	
-	@GetMapping("/example")
+	@PostMapping("/example")
 	public List<EmployeeDto> findEmployeeByExample(@RequestBody EmployeeDto employeeDto) {
 		Employee employee = employeeMapper.dtoToEmployee(employeeDto);
-		System.out.println(employee.getId());
-		System.out.println(employee.getName());
-		System.out.println(employee.getPos().getName());
-		System.out.println(employee.getSalary());
-		System.out.println(employee.getCompany().getName());
-		System.out.println(employeeService.findEmployeeByExample(employee).size());
 		return employeeMapper.employeesToDtos(employeeService.findEmployeeByExample(employee));
 	}
 
