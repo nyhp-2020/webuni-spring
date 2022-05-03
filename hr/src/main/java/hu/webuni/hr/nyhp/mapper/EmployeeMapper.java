@@ -23,7 +23,7 @@ public interface EmployeeMapper {
 	EmployeeDto employeeToDto(Employee employee);
 
 	@InheritInverseConfiguration
-	Employee dtoToEmployee(@Valid EmployeeDto employeeDto);
+	Employee dtoToEmployee(EmployeeDto employeeDto);
 
 	List<Employee> dtosToEmployees(List<EmployeeDto> newemployees);
 	
