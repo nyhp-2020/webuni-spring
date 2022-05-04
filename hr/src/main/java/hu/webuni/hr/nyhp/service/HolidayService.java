@@ -26,7 +26,7 @@ public class HolidayService {
 	public Holiday createHoliday(long clid, LocalDate start, LocalDate end) {
 		Employee employee = employeeService.findById(clid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if(end.isBefore(start))
-			throw new StartDateEarlierThanEndDateException();
+			throw new EndDateEarlierThanStartDateException();
 		Holiday holiday = new Holiday();
 		holiday.setClaimer(employee);
 		holiday.setStart(start);

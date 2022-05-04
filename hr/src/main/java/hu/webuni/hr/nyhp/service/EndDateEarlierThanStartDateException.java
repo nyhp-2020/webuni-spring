@@ -6,6 +6,6 @@ package hu.webuni.hr.nyhp.service;
 //}
 //}
 
-public class StartDateEarlierThanEndDateException extends RuntimeException{
+public class EndDateEarlierThanStartDateException extends RuntimeException{
 
 }
