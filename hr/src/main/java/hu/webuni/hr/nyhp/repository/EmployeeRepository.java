@@ -17,8 +17,8 @@ import hu.webuni.hr.nyhp.model.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
 //	List<Employee> findBySalaryGreaterThan(int salary);
 
-//	@EntityGraph(attributePaths = "pos")
-//	Optional<Employee> findById(long id);
+	@EntityGraph(attributePaths = { "pos", "company" })
+	Optional<Employee> findById(long id);
 
 	Page<Employee> findBySalaryGreaterThan(int salary, Pageable pageable);
 

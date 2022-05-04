@@ -14,6 +14,7 @@ import hu.webuni.hr.nyhp.model.Position;
 import hu.webuni.hr.nyhp.repository.CompanyRepository;
 import hu.webuni.hr.nyhp.repository.CompanyTypeRepository;
 import hu.webuni.hr.nyhp.repository.EmployeeRepository;
+import hu.webuni.hr.nyhp.repository.HolidayRepository;
 import hu.webuni.hr.nyhp.repository.PositionRepository;
 
 @Service
@@ -34,12 +35,16 @@ public class InitDbService {
 	@Autowired
 	PositionRepository positionRepository;
 	
+	@Autowired
+	HolidayRepository holidayRepository;
+	
 	@Transactional
 	public void clearDB() {
 		employeeRepository.deleteAll();
 		companyRepository.deleteAll();
 		positionRepository.deleteAll();
 		companytypeRepository.deleteAll();
+		holidayRepository.deleteAll();
 	}
 	
 	@Transactional
