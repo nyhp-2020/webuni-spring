@@ -23,14 +23,14 @@ public class HolidayService {
 	EmployeeService employeeService;
 	
 	@Transactional
-	public Holiday createHoliday(long clid, LocalDate start, LocalDate end) {
+	public Holiday createHoliday(long clid, LocalDate startDate, LocalDate endDate) {
 		Employee employee = employeeService.findById(clid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		if(end.isBefore(start))
+		if(endDate.isBefore(startDate))
 			throw new EndDateEarlierThanStartDateException();
 		Holiday holiday = new Holiday();
 		holiday.setClaimer(employee);
-		holiday.setStart(start);
-		holiday.setEnd(end);
+		holiday.setStartDate(startDate);
+		holiday.setEndDate(endDate);
 		holiday.setClaimDate(LocalDate.now());
 		return holidayRepository.save(holiday);
 	}

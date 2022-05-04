@@ -8,25 +8,28 @@ public class HolidayDto {
 
 	private long id;
 	private Employee claimer;
-	private LocalDate start;
-	private LocalDate end;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	private LocalDate claimDate;
 	private Employee approver;
-	private Boolean approved = false;
+	private Boolean approved;
 
 	public HolidayDto() {
 	}
 
-	public HolidayDto(long id, Employee claimer, LocalDate start, LocalDate end, LocalDate claimDate, Employee approver,
-			Boolean approved) {
+	public HolidayDto(long id, Employee claimer, LocalDate startDate, LocalDate endDate, LocalDate claimDate,
+			Employee approver, Boolean approved) {
+		super();
 		this.id = id;
 		this.claimer = claimer;
-		this.start = start;
-		this.end = end;
+		this.startDate = startDate;
+		this.endDate = endDate;
 		this.claimDate = claimDate;
 		this.approver = approver;
 		this.approved = approved;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -44,20 +47,20 @@ public class HolidayDto {
 		this.claimer = claimer;
 	}
 
-	public LocalDate getStart() {
-		return start;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setStart(LocalDate start) {
-		this.start = start;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	public LocalDate getEnd() {
-		return end;
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
-	public void setEnd(LocalDate end) {
-		this.end = end;
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 
 	public LocalDate getClaimDate() {
