@@ -1,17 +1,18 @@
 package hu.webuni.hr.nyhp.web;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webuni.hr.nyhp.dto.HolidayDto;
 import hu.webuni.hr.nyhp.mapper.HolidayMapper;
 import hu.webuni.hr.nyhp.model.Holiday;
-import hu.webuni.hr.nyhp.repository.HolidayRepository;
 import hu.webuni.hr.nyhp.service.HolidayService;
 
 @RestController
@@ -23,7 +24,7 @@ public class HolidayController {
 
 	@Autowired
 	HolidayService holidayService;
-	
+
 	@Autowired
 	HolidayMapper holidayMapper;
 
@@ -32,5 +33,31 @@ public class HolidayController {
 			@PathVariable LocalDate end) {
 		Holiday holiday = holidayService.createHoliday(clid, start, end);
 		return holidayMapper.holidayToDto(holiday);
+	}
+
+	@GetMapping
+	public List<HolidayDto> findAll(@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pageSize, @RequestParam(defaultValue = "id") String sortBy) {
+		List<Holiday> holidays = holidayService.findAll(pageNo, pageSize, sortBy);
+		return holidayMapper.holidaysToDtos(holidays);
+	}
+
+	@GetMapping("/judge/{hid}/{aid}")
+	public HolidayDto judgeRequest(@PathVariable long hid, @PathVariable long aid,
+			@RequestParam(defaultValue = "false") boolean approved) {
+		Holiday holiday = holidayService.judgeRequest(hid, aid, approved);
+		return holidayMapper.holidayToDto(holiday);
+	}
+
+	@GetMapping("/modify/{hid}/{clid}/from/{start}/to/{end}")
+	public HolidayDto modifyRequest(@PathVariable long hid, @PathVariable long clid, @PathVariable LocalDate start,
+			@PathVariable LocalDate end) {
+		Holiday holiday = holidayService.modifyRequest(hid, clid, start, end);
+		return holidayMapper.holidayToDto(holiday);
+	}
+	
+	@GetMapping("/delete/{hid}/{clid}")
+	public void deleteRequest(@PathVariable long hid, @PathVariable long clid) {
+		holidayService.deleteRequest(hid, clid);
 	}
 }
