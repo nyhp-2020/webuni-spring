@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -90,4 +91,17 @@ public class HolidayService {
 		holidayRepository.delete(holiday);	
 	}
 
+//	public List<Holiday> findEmployeeByExample(Holiday example) {
+//		
+//		Employee claimer = example.getClaimer();
+//		
+//		Specification<Holiday> spec = Specification.where(null);
+//		
+//		if (claimer != null && claimer.getName() != null && !claimer.getName().equals("")) {
+//			spec = spec.and(EmployeeSpecifications.hasClaimer(claimer));
+//		}
+//		
+//		return employeeRepository.findAll(spec, Sort.by("id"));
+//	}
+	
 }
