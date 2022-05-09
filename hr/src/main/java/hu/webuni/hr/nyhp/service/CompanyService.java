@@ -1,8 +1,6 @@
 package hu.webuni.hr.nyhp.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.model.Position;
 import hu.webuni.hr.nyhp.repository.CompanyRepository;
 import hu.webuni.hr.nyhp.repository.EmployeeRepository;
+import hu.webuni.hr.nyhp.repository.PositionRepository;
 
 @Service
 public class CompanyService {
@@ -24,6 +24,9 @@ public class CompanyService {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	PositionRepository positionRepository;
 	
 	@Transactional
 	public Company modifyCompany(long id, Company company) {
@@ -76,6 +79,16 @@ public class CompanyService {
 	public Employee addEmployee(Employee employee,long coid) {
 		Company company = companyRepository.findById(coid).get();
 		company.addEmployee(employee);
+		
+		Position transientPos = employee.getPos();
+		if(transientPos != null) {
+			List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
+			if(positionsByName.isEmpty())
+				throw new RuntimeException("position with this name does not exist in DB");
+			Position positionInDB = positionsByName.get(0);
+			employee.setPos(positionInDB);
+		}
+		
 		return employeeRepository.save(employee);
 		//return employee;
 	}
@@ -104,6 +117,16 @@ public class CompanyService {
 		
 		for(Employee employee:newemployees) {
 			company.addEmployee(employee);
+			
+			Position transientPos = employee.getPos();
+			if(transientPos != null) {
+				List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
+				if(positionsByName.isEmpty())
+					throw new RuntimeException("position with this name does not exist in DB");
+				Position positionInDB = positionsByName.get(0);
+				employee.setPos(positionInDB);
+			}
+			
 			employeeRepository.save(employee);
 		}
 		//companyRepository.save(company);
