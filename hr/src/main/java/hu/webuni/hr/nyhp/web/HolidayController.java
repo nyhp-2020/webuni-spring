@@ -6,12 +6,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import hu.webuni.hr.nyhp.dto.EmployeeDto;
 import hu.webuni.hr.nyhp.dto.HolidayDto;
 import hu.webuni.hr.nyhp.mapper.HolidayMapper;
+import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.model.Holiday;
 import hu.webuni.hr.nyhp.service.HolidayService;
 
@@ -59,5 +63,11 @@ public class HolidayController {
 	@GetMapping("/delete/{hid}/{clid}")
 	public void deleteRequest(@PathVariable long hid, @PathVariable long clid) {
 		holidayService.deleteRequest(hid, clid);
+	}
+	
+	@PostMapping("/example")
+	public List<HolidayDto> findHolidayByExample(@RequestBody HolidayDto holidayDto) {
+		Holiday holiday = holidayMapper.dtoToHoliday(holidayDto);
+		return holidayMapper.holidaysToDtos(holidayService.findHolidayByExample(holiday));
 	}
 }

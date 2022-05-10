@@ -91,17 +91,54 @@ public class HolidayService {
 		holidayRepository.delete(holiday);	
 	}
 
-//	public List<Holiday> findEmployeeByExample(Holiday example) {
-//		
-//		Employee claimer = example.getClaimer();
-//		
-//		Specification<Holiday> spec = Specification.where(null);
-//		
-//		if (claimer != null && claimer.getName() != null && !claimer.getName().equals("")) {
-//			spec = spec.and(EmployeeSpecifications.hasClaimer(claimer));
-//		}
-//		
-//		return employeeRepository.findAll(spec, Sort.by("id"));
-//	}
+	public List<Holiday> findHolidayByExample(Holiday example) {
+
+		Employee approver = example.getApprover();
+		boolean approved = example.getApproved();
+		Employee claimer = example.getClaimer();
+		LocalDate claimDate = example.getClaimDate();
+		LocalDate startDate = example.getStartDate();
+		LocalDate endDate = example.getEndDate();
+		
+		Specification<Holiday> spec = Specification.where(null);
+		Specification<Holiday> spec1 = Specification.where(null);
+		Specification<Holiday> spec2 = Specification.where(null);
+		Specification<Holiday> spec3 = Specification.where(null);
+		Specification<Holiday> spec4 = Specification.where(null);
+		
+		if(approver != null)
+			spec = spec.and(HolidaySpecifications.hasApproved(approved));
+		
+		if (claimer != null && claimer.getName() != null && !claimer.getName().equals("")) {
+			spec = spec.and(HolidaySpecifications.hasClaimer(claimer));
+		}
+		
+		if(claimDate != null && startDate != null && endDate != null && startDate.isBefore(endDate))
+			spec = spec.and(HolidaySpecifications.hasClaimDate(claimDate, startDate, endDate));
+		
+		if(claimDate == null && startDate != null && endDate != null && startDate.isBefore(endDate))
+			//A.(B+C)
+			spec1 = spec1
+			.and(HolidaySpecifications.hasStartDate(startDate, endDate));
+			spec2 = spec2
+			.and(HolidaySpecifications.hasEndDate(startDate, endDate));
+			
+			spec3 = spec3
+					.and(HolidaySpecifications.lessStartDate(startDate));
+			spec4 = spec4
+					.and(HolidaySpecifications.greaterEndDate(endDate));
+					
+			spec3 = spec3.and(spec4);
+			spec3 = spec3.and(spec);
+			
+			spec1 = spec1.or(spec2);
+			spec1 = spec1.and(spec);
+			
+			spec = spec1.or(spec3);
+			
+		
+		return holidayRepository.findAll(spec, Sort.by("id"));
+	}
+
 	
 }
