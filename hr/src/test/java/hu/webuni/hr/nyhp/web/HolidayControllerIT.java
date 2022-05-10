@@ -63,6 +63,14 @@ public class HolidayControllerIT {
 	
 	@Test
 	void testFindHolidaysByExample() throws Exception {
+		List<Employee> employees = employeeService.findAll();
+		Employee employee = employees.get(0);
+		HolidayDto holidayDto = new HolidayDto();
+		Holiday holiday = new Holiday();
+		holiday.setApproved(true);
+		holiday.setApprover(employee);
+		holidayService.findHolidayByExample(holiday);
+		
 		
 	}
 	
@@ -75,15 +83,18 @@ public class HolidayControllerIT {
 		.isOk();
 	} 
 	
-//	private List<HolidayDto> findHolidayByExample(HolidayDto holidayDto){
-//		webTestClient
-//		.post()
-//		.uri(BASE_URI+"/example")
-//		.bodyValue(holidayDto)
-//		.exchange()
-//		.expectStatus()
-//		.isOk().
-//		
-//	}
+	private List<HolidayDto> findHolidayByExample(HolidayDto holidayDto){
+		return webTestClient
+		.post()
+		.uri(BASE_URI+"/example")
+		.bodyValue(holidayDto)
+		.exchange()
+		.expectStatus()
+		.isOk()
+		.expectBodyList(HolidayDto.class)
+		.returnResult()
+		.getResponseBody();	
+		
+	}
 
 }
