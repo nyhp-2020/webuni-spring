@@ -19,6 +19,10 @@ public class HolidaySpecifications {
 		return (root, cq, cb) -> cb.like(cb.upper(root.get(Holiday_.claimer).get(Employee_.name)), claimer.getName().toUpperCase() + "%");
 	}
 	
+	public static Specification<Holiday> hasApprover(Employee approver) {
+		return (root, cq, cb) -> cb.like(cb.upper(root.get(Holiday_.approver).get(Employee_.name)), approver.getName().toUpperCase() + "%");
+	}
+	
 	public static Specification<Holiday> hasClaimDate(/*LocalDate claimDate,*/ LocalDate startDate, LocalDate endDate) {
 		return (root, cq, cb) -> cb.between(root.get(Holiday_.claimDate), startDate, endDate);
 	}

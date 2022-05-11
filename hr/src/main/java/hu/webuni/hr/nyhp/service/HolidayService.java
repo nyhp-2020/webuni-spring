@@ -105,6 +105,10 @@ public class HolidayService {
 		if (approver != null)
 			spec = spec.and(HolidaySpecifications.hasApproved(approved));
 
+		if (approver != null && approver.getName() != null && !approver.getName().equals("")) {
+			spec = spec.and(HolidaySpecifications.hasApprover(approver));
+		}
+
 		if (claimer != null && claimer.getName() != null && !claimer.getName().equals("")) {
 			spec = spec.and(HolidaySpecifications.hasClaimer(claimer));
 		}
