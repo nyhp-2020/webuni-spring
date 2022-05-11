@@ -10,8 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import hu.webuni.hr.nyhp.dto.HolidayDto;
 import hu.webuni.hr.nyhp.model.Employee;
@@ -55,7 +58,7 @@ public class HolidayControllerIT {
 		createHoliday(clid2,startd,endd);
 		
 		List<Holiday> holidays = holidayRepository.findAll();
-		System.out.println(holidays.size());
+		//System.out.println(holidays.size());
 		assertThat(ids.contains(holidays.get(0).getClaimer().getId()));
 		assertThat(ids.contains(holidays.get(1).getClaimer().getId()));
 	}
@@ -65,12 +68,37 @@ public class HolidayControllerIT {
 	void testFindHolidaysByExample() throws Exception {
 		List<Employee> employees = employeeService.findAll();
 		Employee employee = employees.get(0);
-		HolidayDto holidayDto = new HolidayDto();
-		Holiday holiday = new Holiday();
-		holiday.setApproved(true);
-		holiday.setApprover(employee);
-		holidayService.findHolidayByExample(holiday);
 		
+		long clid1=employees.get(0).getId();
+
+		LocalDate startd = LocalDate.of(2022,5,10);
+		LocalDate endd = LocalDate.of(2022, 5, 15);
+		createHoliday(clid1,startd,endd);
+		
+		long clid2=employees.get(1).getId();
+
+		startd = LocalDate.of(2022,5,13);
+		endd = LocalDate.of(2022, 5, 13);
+		createHoliday(clid2,startd,endd);
+		
+		List<Holiday> holidays = holidayRepository.findAll();
+		//System.out.println(holidays.size());
+
+		Holiday holiday = holidays.get(0);
+		//holiday.setApproved(false);
+		holiday.setApprover(null);
+		holiday.setClaimer(null);
+		holiday.setClaimDate(null);
+		holiday.setStartDate(LocalDate.of(2022, 5, 11));
+		holiday.setEndDate(LocalDate.of(2022, 5, 14));
+		
+		Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+		
+		Page<Holiday> foundHolidays = holidayService.findHolidayByExample(holiday, pageable);
+		assertThat(foundHolidays.getContent().size()== 2);
+		System.out.println(foundHolidays.getContent().size());
+//		System.out.println(foundHolidays.getContent().get(0).getStartDate());
+//		System.out.println(foundHolidays.getContent().get(0).getEndDate());
 		
 	}
 	
