@@ -102,7 +102,7 @@ public class HolidayService {
 
 		Specification<Holiday> spec = Specification.where(null);
 
-		if (approver != null)
+		if (approver != null && (approver.getName().equals("") || approver.getName() == null ))
 			spec = spec.and(HolidaySpecifications.hasApproved(approved));
 
 		if (approver != null && approver.getName() != null && !approver.getName().equals("")) {
