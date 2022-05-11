@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import hu.webuni.airport.service.AirportService;
 import hu.webuni.airport.service.DefaultDiscountService;
 import hu.webuni.airport.service.DiscountService;
+import hu.webuni.airport.service.InitDbService;
 import hu.webuni.airport.service.PriceService;
 
 @SpringBootApplication
@@ -20,6 +21,9 @@ public class AirportApplication implements CommandLineRunner {
 	
 	@Autowired
 	AirportService airportService;
+	
+	@Autowired
+	InitDbService initDbService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AirportApplication.class, args);
@@ -30,6 +34,7 @@ public class AirportApplication implements CommandLineRunner {
 //		airportService.createFlight();
 		System.out.println(priceService.getFinalPrice(200));
 		System.out.println(priceService.getFinalPrice(20000));
+		initDbService.createUserIfNeeded();
 	}
 
 // Ezt kiszerveztük a konfigurációs osztályba (DiscountConfiguration)
