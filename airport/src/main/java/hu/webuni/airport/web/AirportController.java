@@ -67,7 +67,7 @@ public class AirportController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthority('admin')")
+	@PreAuthorize("hasAuthority('admin')") //methodus szintű védelem
 	public ResponseEntity<AirportDto> modifyAirport(@PathVariable long id, @RequestBody AirportDto airportDto) {
 		Airport airport = airportMapper.dtoToAirport(airportDto);
 		airport.setId(id);
