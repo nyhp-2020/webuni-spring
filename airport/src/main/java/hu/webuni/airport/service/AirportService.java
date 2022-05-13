@@ -65,7 +65,7 @@ public class AirportService {
 		if (airportRepository.existsById(airport.getId())) {
 			logEntryService.createLog(
 					String.format("Airport modified with id %d new name is %s ", airport.getId(), airport.getName()));
-			callBackendSystem();
+//			callBackendSystem();
 			return airportRepository.save(airport); // insert,update
 		} else
 			throw new NoSuchElementException();

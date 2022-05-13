@@ -67,7 +67,7 @@ public class AirportController {
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAuthorit('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public ResponseEntity<AirportDto> modifyAirport(@PathVariable long id, @RequestBody AirportDto airportDto) {
 		Airport airport = airportMapper.dtoToAirport(airportDto);
 		airport.setId(id);
