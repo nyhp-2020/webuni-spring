@@ -2,11 +2,14 @@ package hu.webuni.hr.nyhp.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -22,6 +25,16 @@ public class Employee {
 	private LocalDateTime startd;
 	@ManyToOne
 	private Company company;
+	
+	@Column(unique = true)
+	private String username;
+	private String password;
+	
+	@ManyToOne
+	private Employee superior;
+	
+	@ElementCollection(fetch = FetchType.EAGER) //Role-ok behúzása
+	private Set<String> roles;
 
 	public Employee() {
 
@@ -104,6 +117,40 @@ public class Employee {
 
 	public void setStartd(LocalDateTime startd) {
 		this.startd = startd;
+	}
+	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Employee getSuperior() {
+		return superior;
+	}
+
+	public void setSuperior(Employee superior) {
+		this.superior = superior;
+	}
+	
+
+	public Set<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<String> roles) {
+		this.roles = roles;
 	}
 
 	@Override
