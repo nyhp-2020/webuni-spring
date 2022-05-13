@@ -24,7 +24,9 @@ public class AirportUserDetailsService implements UserDetailsService {
 
 		AirportUser airportUser = userRepository.findById(username)
 				.orElseThrow(()-> new UsernameNotFoundException(username));
-		return new User(username,airportUser.getPassword(),airportUser.getRoles().stream().map(SimpleGrantedAuthority::new)
+		
+		return new User(username,airportUser.getPassword(),
+				airportUser.getRoles().stream().map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList()));
 	}
 

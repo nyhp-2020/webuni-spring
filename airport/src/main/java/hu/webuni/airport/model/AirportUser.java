@@ -14,7 +14,7 @@ public class AirportUser {
 	private String username;
 	private String password;
 	
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection(fetch = FetchType.EAGER) //Role-ok behúzása
 	private Set<String> roles;
 	
 	public AirportUser() {
