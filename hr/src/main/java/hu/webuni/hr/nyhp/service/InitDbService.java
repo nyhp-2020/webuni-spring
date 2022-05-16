@@ -2,8 +2,11 @@ package hu.webuni.hr.nyhp.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +41,9 @@ public class InitDbService {
 	@Autowired
 	HolidayRepository holidayRepository;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@Transactional
 	public void clearDB() {
 		employeeRepository.deleteAll();
@@ -47,7 +53,7 @@ public class InitDbService {
 		holidayRepository.deleteAll();
 	}
 	
-	@Transactional
+	//@Transactional
 	public void insertTestData() {
 		CompanyType ct = new CompanyType();
 		ct.setName("BT");
@@ -86,7 +92,12 @@ public class InitDbService {
 //		employee.setPos(pos);
 		employee.setSalary(10000);
 		employee.setStartd(LocalDateTime.of(2021, 4, 10, 10, 0, 0));
+		employee.setUsername("boss");
+		employee.setPassword(passwordEncoder.encode("pass"));
+		employee.setRoles(Set.of("user"));
+		employee.setSuperior(null);
 		employeeRepository.save(employee);
+		//Employee boss = employeeRepository.findByUsername("boss").orElseThrow(()-> new UsernameNotFoundException("boss"));
 		
 		employee = new Employee();
 		employee.setName("Test2");
@@ -96,6 +107,10 @@ public class InitDbService {
 //		employee.setPos(pos);
 		employee.setSalary(5000);
 		employee.setStartd(LocalDateTime.of(2022, 4, 3, 0, 0, 0));
+//		employee.setUsername("user2");
+//		employee.setPassword(passwordEncoder.encode("pass"));
+//		employee.setRoles(Set.of("user"));
+//		employee.setSuperior(boss);
 		employeeRepository.save(employee);
 		
 		employee = new Employee();
@@ -106,6 +121,10 @@ public class InitDbService {
 //		employee.setPos(pos);
 		employee.setSalary(7000);
 		employee.setStartd(LocalDateTime.of(2020, 6, 5, 0, 0, 0));
+//		employee.setUsername("user3");
+//		employee.setPassword(passwordEncoder.encode("pass"));
+//		employee.setRoles(Set.of("admin","user"));
+//		employee.setSuperior(boss);
 		employeeRepository.save(employee);
 		
 		

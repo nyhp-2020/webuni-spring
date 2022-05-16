@@ -40,5 +40,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 	@Query("SELECT e.position, AVG(e.salary) AS avgsalary FROM Employee e WHERE e.company.id = :id GROUP BY e.position ORDER BY avgsalary DESC")
 	List<Object[]> getAvgSalaryOfCompanyGroupedByPosition(long id);
 
+	@EntityGraph(attributePaths = { "pos", "company","employee" })
 	Optional<Employee> findByUsername(String username);
 }
