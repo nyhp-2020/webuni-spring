@@ -53,6 +53,7 @@ public class HrApplication implements CommandLineRunner {
 		
 		initdbservice.clearDB();
 		initdbservice.insertTestData();
+		initdbservice.setConnections();
 	}
 
 //	@Bean

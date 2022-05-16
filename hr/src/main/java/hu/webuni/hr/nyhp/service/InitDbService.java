@@ -53,7 +53,7 @@ public class InitDbService {
 		holidayRepository.deleteAll();
 	}
 	
-	//@Transactional
+	@Transactional
 	public void insertTestData() {
 		CompanyType ct = new CompanyType();
 		ct.setName("BT");
@@ -95,10 +95,10 @@ public class InitDbService {
 		employee.setUsername("boss");
 		employee.setPassword(passwordEncoder.encode("pass"));
 		employee.setRoles(Set.of("user"));
-		employee.setSuperior(null);
+		//employee.setSuperior(null);
 		employeeRepository.save(employee);
-		//Employee boss = employeeRepository.findByUsername("boss").orElseThrow(()-> new UsernameNotFoundException("boss"));
-		
+//		//Employee boss = employeeRepository.findByUsername("boss").orElseThrow(()-> new UsernameNotFoundException("boss"));
+//		
 		employee = new Employee();
 		employee.setName("Test2");
 		//employee.setPosition("Broker");
@@ -107,10 +107,10 @@ public class InitDbService {
 //		employee.setPos(pos);
 		employee.setSalary(5000);
 		employee.setStartd(LocalDateTime.of(2022, 4, 3, 0, 0, 0));
-//		employee.setUsername("user2");
-//		employee.setPassword(passwordEncoder.encode("pass"));
-//		employee.setRoles(Set.of("user"));
-//		employee.setSuperior(boss);
+		employee.setUsername("user2");
+		employee.setPassword(passwordEncoder.encode("pass"));
+		employee.setRoles(Set.of("user"));
+		//employee.setSuperior(boss);
 		employeeRepository.save(employee);
 		
 		employee = new Employee();
@@ -121,10 +121,10 @@ public class InitDbService {
 //		employee.setPos(pos);
 		employee.setSalary(7000);
 		employee.setStartd(LocalDateTime.of(2020, 6, 5, 0, 0, 0));
-//		employee.setUsername("user3");
-//		employee.setPassword(passwordEncoder.encode("pass"));
-//		employee.setRoles(Set.of("admin","user"));
-//		employee.setSuperior(boss);
+		employee.setUsername("user3");
+		employee.setPassword(passwordEncoder.encode("pass"));
+		employee.setRoles(Set.of("admin","user"));
+		//employee.setSuperior(boss);
 		employeeRepository.save(employee);
 		
 		
@@ -143,47 +143,80 @@ public class InitDbService {
 		//company.setType(companytypeRepository.findByName("BT"));
 		companyRepository.save(company);
 		
+//		List<Employee> employees = employeeRepository.findAll();
+//		employee = employees.get(0);
+//		
+//		List<Company> companies = companyRepository.findAll();
+//		company = companies.get(0);
+//		
+//		companyService.addEmployee(employee, company.getId());
+//		
+//		List<Position> positions = positionRepository.findByName("Manager");
+//		pos = positions.get(0);
+//		pos.addEmployee(employee);
+//		positionRepository.save(pos);
+//		
+//		ct= companytypeRepository.findByName("KFT");
+//		ct.addCompany(company);
+//		companytypeRepository.save(ct);
+//		
+//		
+//		
+//		company = companies.get(1);
+//		employee = employees.get(1);
+//		
+//		companyService.addEmployee(employee, company.getId());
+//		
+//		positions = positionRepository.findByName("Developer");
+//		pos = positions.get(0);
+//		pos.addEmployee(employee);
+//		positionRepository.save(pos);
+//		
+//		ct= companytypeRepository.findByName("BT");
+//		ct.addCompany(company);
+//		companytypeRepository.save(ct);
+//		
+//		employee = employees.get(2);
+//		
+//		companyService.addEmployee(employee, company.getId());
+//		
+//		positions = positionRepository.findByName("Developer");
+//		pos = positions.get(0);
+//		pos.addEmployee(employee);
+//		positionRepository.save(pos);
+	}
+	
+	@Transactional
+	public void setConnections() {
 		List<Employee> employees = employeeRepository.findAll();
-		employee = employees.get(0);
-		
+				
 		List<Company> companies = companyRepository.findAll();
-		company = companies.get(0);
-		
-		companyService.addEmployee(employee, company.getId());
+		Company company = companies.get(0);
 		
 		List<Position> positions = positionRepository.findByName("Manager");
-		pos = positions.get(0);
-		pos.addEmployee(employee);
-		positionRepository.save(pos);
-		
-		ct= companytypeRepository.findByName("KFT");
-		ct.addCompany(company);
-		companytypeRepository.save(ct);
-		
-		
-		
-		company = companies.get(1);
-		employee = employees.get(1);
-		
-		companyService.addEmployee(employee, company.getId());
+		Position manager = positions.get(0);
 		
 		positions = positionRepository.findByName("Developer");
-		pos = positions.get(0);
-		pos.addEmployee(employee);
-		positionRepository.save(pos);
+		Position developer = positions.get(0);
 		
-		ct= companytypeRepository.findByName("BT");
-		ct.addCompany(company);
-		companytypeRepository.save(ct);
+		positions = positionRepository.findByName("Tester");
+		Position tester = positions.get(0);
 		
-		employee = employees.get(2);
+		Employee boss = employeeRepository.findByUsername("boss").orElseThrow(()-> new UsernameNotFoundException("boss"));
+		manager.addEmployee(boss);
+		//boss.setRoles(Set.of("user"));
 		
-		companyService.addEmployee(employee, company.getId());
-		
-		positions = positionRepository.findByName("Developer");
-		pos = positions.get(0);
-		pos.addEmployee(employee);
-		positionRepository.save(pos);
+		for(Employee employee:employees) {
+			employee.setSuperior(boss);
+			companyService.addEmployee(employee, company.getId());
+			if(employee.getUsername().equals("user3")) {
+				employee.setRoles(Set.of("admin","user"));
+				developer.addEmployee(employee);	
+			}else if(!employee.getUsername().equals("boss")) {
+				employee.setRoles(Set.of("user"));
+				tester.addEmployee(employee);
+			}else
+				employee.setRoles(Set.of("user"));	
+		}	
 	}
-
 }
