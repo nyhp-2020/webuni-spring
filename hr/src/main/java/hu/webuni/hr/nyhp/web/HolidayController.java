@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ public class HolidayController {
 	HolidayMapper holidayMapper;
 
 	@GetMapping("/{clid}/from/{start}/to/{end}")
+	@PreAuthorize("#clid == authentication.principal.employee.id")
 	public HolidayDto createHoliday(@PathVariable long clid, @PathVariable LocalDate start,
 			@PathVariable LocalDate end) {
 		Holiday holiday = holidayService.createHoliday(clid, start, end);
@@ -47,6 +49,7 @@ public class HolidayController {
 	}
 
 	@GetMapping("/judge/{hid}/{aid}")
+	@PreAuthorize("#aid == authentication.principal.employee.id")
 	public HolidayDto judgeRequest(@PathVariable long hid, @PathVariable long aid,
 			@RequestParam(defaultValue = "false") boolean approved) {
 		Holiday holiday = holidayService.judgeRequest(hid, aid, approved);

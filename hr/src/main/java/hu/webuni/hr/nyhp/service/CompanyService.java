@@ -105,7 +105,7 @@ public class CompanyService {
 		employee.setCompany(null);
 		company.getEmployees().remove(employee);
 		
-		employeeRepository.save(employee);
+		employeeRepository.save(employee); //nem kéne mert a Transactional miatt már menedzselt entitás
 		//companyRepository.findById(coid).get().delEmployee(emid);
 	}
 	

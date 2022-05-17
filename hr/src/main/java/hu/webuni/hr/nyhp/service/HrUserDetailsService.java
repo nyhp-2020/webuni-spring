@@ -4,13 +4,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import hu.webuni.hr.nyhp.model.Employee;
+import hu.webuni.hr.nyhp.model.HrUser;
 import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 
 @Service
@@ -24,10 +24,9 @@ public class HrUserDetailsService implements UserDetailsService {
 		Employee employee = employeeRepository.findByUsername(username)
 				.orElseThrow(()-> new UsernameNotFoundException(username));
 		
-		return new User(username,employee.getPassword(),
+		return new HrUser(username,employee.getPassword(),
 				employee.getRoles().stream().map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList()));
-
+				.collect(Collectors.toList()),employee);
 	}
 
 }
