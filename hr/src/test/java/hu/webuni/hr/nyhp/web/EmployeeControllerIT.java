@@ -26,8 +26,8 @@ public class EmployeeControllerIT {
 	@Autowired
 	WebTestClient webTestClient;
 	
-	@Autowired
-	EmployeeService employeeService;
+//	@Autowired
+//	EmployeeService employeeService;
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
@@ -40,21 +40,23 @@ public class EmployeeControllerIT {
 		LocalDateTime ldt = LocalDateTime.of(2019, 9, 14, 0, 0, 0, 0);
 		//Employee e1 = new Employee(1, "Peter", "Manager", 10000, ldt);
 		EmployeeDto employeeDto1 = new EmployeeDto(1, "Peter", "Manager", 10000, ldt);
-		createEmployee(employeeDto1);
+		EmployeeDto savedDto = createEmployee(employeeDto1);
 		
-		EmployeeDto employeeDtoBefore = getEmployeeById();
+		EmployeeDto employeeDtoBefore = getEmployeeById(savedDto.getId());
 
 		ldt = LocalDateTime.of(2022, 3, 31, 0, 0, 0, 0);
 		EmployeeDto employeeDto2 = new EmployeeDto(1, "Peter Ny. H.", "Manager", 20000, ldt);
-		modifyEmployee(employeeDto2);
+		EmployeeDto modifiedDto = modifyEmployee(savedDto.getId(), employeeDto2);
 		
-		EmployeeDto employeeDtoAfter = getEmployeeById();
+		EmployeeDto employeeDtoAfter = getEmployeeById(modifiedDto.getId());
 		
-		assertThat(employeeDto1)
+//		assertThat(employeeDto1)
+		assertThat(savedDto)
 		.usingRecursiveComparison()
 		.isEqualTo(employeeDtoBefore);
 		
-		assertThat(employeeDto2)
+//		assertThat(employeeDto2)
+		assertThat(modifiedDto)
 		.usingRecursiveComparison()
 		.isEqualTo(employeeDtoAfter);
 		
@@ -92,10 +94,10 @@ public class EmployeeControllerIT {
 		.isBadRequest();
 	}
 
-	private EmployeeDto getEmployeeById() {
+	private EmployeeDto getEmployeeById(long id) {
 		return webTestClient
 		.get()
-		.uri(BASE_URI+"/1")
+		.uri(BASE_URI+"/"+id)
 		.exchange()
 		.expectStatus()
 		.isOk().expectBody(EmployeeDto.class)
@@ -103,24 +105,28 @@ public class EmployeeControllerIT {
 		.getResponseBody();
 	}
 
-	private void modifyEmployee(EmployeeDto employeeDto) {
-		webTestClient
+	private EmployeeDto modifyEmployee(long id,EmployeeDto employeeDto) {
+		return webTestClient
 		.put()
-		.uri(BASE_URI+"/1")
+		.uri(BASE_URI+"/"+id)
 		.bodyValue(employeeDto)
 		.exchange()
 		.expectStatus()
-		.isOk();
+		.isOk().expectBody(EmployeeDto.class)
+		.returnResult()
+		.getResponseBody();
 		
 	}
 
-	private void createEmployee(EmployeeDto employeeDto) {
-		webTestClient
+	private EmployeeDto createEmployee(EmployeeDto employeeDto) {
+		return webTestClient
 		.post()
 		.uri(BASE_URI)
 		.bodyValue(employeeDto)
 		.exchange()
 		.expectStatus()
-		.isOk();
+		.isOk().expectBody(EmployeeDto.class)
+		.returnResult()
+		.getResponseBody();
 	}
 }

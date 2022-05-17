@@ -28,6 +28,9 @@ public class CompanyService {
 	@Autowired
 	PositionRepository positionRepository;
 	
+	@Autowired
+	PositionService positionService;
+	
 	@Transactional
 	public Company modifyCompany(long id, Company company) {
 		findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -79,15 +82,16 @@ public class CompanyService {
 	public Employee addEmployee(Employee employee,long coid) {
 		Company company = companyRepository.findById(coid).get();
 		company.addEmployee(employee);
+		positionService.setPositionForEmployee(employee);
 		
-		Position transientPos = employee.getPos();
-		if(transientPos != null) {
-			List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
-			if(positionsByName.isEmpty())
-				throw new RuntimeException("position with this name does not exist in DB");
-			Position positionInDB = positionsByName.get(0);
-			employee.setPos(positionInDB);
-		}
+//		Position transientPos = employee.getPos();
+//		if(transientPos != null) {
+//			List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
+//			if(positionsByName.isEmpty())
+//				throw new RuntimeException("position with this name does not exist in DB");
+//			Position positionInDB = positionsByName.get(0);
+//			employee.setPos(positionInDB);
+//		}
 		
 		return employeeRepository.save(employee);
 		//return employee;
@@ -100,6 +104,7 @@ public class CompanyService {
 		Employee employee = employeeRepository.findById(emid).get();
 		employee.setCompany(null);
 		company.getEmployees().remove(employee);
+		
 		employeeRepository.save(employee);
 		//companyRepository.findById(coid).get().delEmployee(emid);
 	}
@@ -117,17 +122,19 @@ public class CompanyService {
 		
 		for(Employee employee:newemployees) {
 			company.addEmployee(employee);
+			positionService.setPositionForEmployee(employee);
 			
-			Position transientPos = employee.getPos();
-			if(transientPos != null) {
-				List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
-				if(positionsByName.isEmpty())
-					throw new RuntimeException("position with this name does not exist in DB");
-				Position positionInDB = positionsByName.get(0);
-				employee.setPos(positionInDB);
-			}
+//			Position transientPos = employee.getPos();
+//			if(transientPos != null) {
+//				List<Position> positionsByName = positionRepository.findByName(transientPos.getName());
+//				if(positionsByName.isEmpty())
+//					throw new RuntimeException("position with this name does not exist in DB");
+//				Position positionInDB = positionsByName.get(0);
+//				employee.setPos(positionInDB);
+//			}
 			
-			employeeRepository.save(employee);
+			Employee savedEmployee = employeeRepository.save(employee);
+			employee.setId(savedEmployee.getId());
 		}
 		//companyRepository.save(company);
 		

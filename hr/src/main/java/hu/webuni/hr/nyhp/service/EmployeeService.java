@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import hu.webuni.hr.nyhp.model.Company;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.model.Position;
+import hu.webuni.hr.nyhp.repository.CompanyRepository;
 import hu.webuni.hr.nyhp.repository.EmployeeRepository;
 
 @Service
@@ -25,6 +26,15 @@ public abstract class EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+
+	@Autowired
+	PositionService positionService;
+
+	@Autowired
+	CompanyService companyService;
+	
+	@Autowired
+	CompanyRepository companyRepository;
 
 //	public EmployeeService(EmployeeRepository employeeRepository) {
 //		super();
@@ -37,6 +47,7 @@ public abstract class EmployeeService {
 	public Employee modifyEmployee(long id, Employee employee) {
 		Employee emp = findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		employee.setId(id);
+		positionService.setPositionForEmployee(employee);
 		return save(employee);
 	}
 
@@ -60,6 +71,8 @@ public abstract class EmployeeService {
 	public Employee save(Employee employee) {
 //		employees.put(employee.getId(), employee);
 //		return employee;
+		positionService.setPositionForEmployee(employee);
+		setCompanyForEmployee(employee);
 		return employeeRepository.save(employee);
 	}
 
@@ -130,6 +143,15 @@ public abstract class EmployeeService {
 		}
 
 		return employeeRepository.findAll(spec, Sort.by("id"));
+	}
+
+	public void setCompanyForEmployee(Employee employee) {
+		Company company = employee.getCompany();
+		if (company != null) {
+			if(!companyRepository.existsById(company.getId()))
+				company = null;
+		}
+		employee.setCompany(company);
 	}
 
 	public abstract int getPayRaisePercent(Employee employee);

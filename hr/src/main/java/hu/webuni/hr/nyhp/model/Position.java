@@ -23,6 +23,10 @@ public class Position {
 		
 	}
 	
+	public Position(String name) {
+		this.name = name;	
+	}
+	
 	public Position(long id, String name, String deegree, int minsalary, Set<Employee> employees) {
 		super();
 		this.id = id;
