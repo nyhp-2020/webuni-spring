@@ -14,8 +14,10 @@ public interface HolidayMapper {
 	
 	@Mapping(target = "claimer.pos", ignore = true)
 	@Mapping(target = "claimer.company", ignore = true)
+	@Mapping(target = "claimer.superior", ignore = true)
 	@Mapping(target = "approver.pos", ignore = true)
 	@Mapping(target = "approver.company", ignore = true)
+	@Mapping(target = "approver.superior", ignore = true)
 	HolidayDto holidayToDto(Holiday holiday);
 	
 	@InheritInverseConfiguration

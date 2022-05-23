@@ -49,7 +49,7 @@ public class HolidayController {
 	}
 
 	@GetMapping("/judge/{hid}/{aid}")
-	@PreAuthorize("#aid == authentication.principal.employee.id")
+	//@PreAuthorize("#aid == authentication.principal.employee.id")
 	public HolidayDto judgeRequest(@PathVariable long hid, @PathVariable long aid,
 			@RequestParam(defaultValue = "false") boolean approved) {
 		Holiday holiday = holidayService.judgeRequest(hid, aid, approved);

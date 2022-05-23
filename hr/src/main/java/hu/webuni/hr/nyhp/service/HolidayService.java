@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -50,14 +51,25 @@ public class HolidayService {
 	}
 
 	@Transactional
+	//@PreAuthorize("#employee.id == authentication.principal.employee.id")
 	public Holiday judgeRequest(long hid, long aid, boolean approved) {
 		Holiday holiday = holidayRepository.findById(hid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		long id =holiday.getClaimer().getSuperior().getId();
+//		System.out.println(id);
 		Employee employee = employeeService.findById(aid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+//		if(id == authentication.principal.employee.id)
+		setApprove(holiday,employee,approved,id);
+//		holiday.setApprover(employee);
+//		holiday.setApproved(approved);
+		return holidayRepository.save(holiday);
+	}
+	
+	@PreAuthorize("#id == authentication.principal.employee.id")
+	public void setApprove(Holiday holiday, Employee employee, boolean approved,long id) {
 		holiday.setApprover(employee);
 		holiday.setApproved(approved);
-		return holidayRepository.save(holiday);
 	}
 
 	@Transactional
