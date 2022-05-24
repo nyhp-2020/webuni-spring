@@ -84,49 +84,51 @@ public class InitDbService {
 		positionRepository.save(pos);
 		
 		
-		Employee employee = new Employee();
-		employee.setName("Test1");
+		Employee employee1 = new Employee();
+		employee1.setName("Test1");
 		//employee.setPosition("Manager");
 //		List<Position> positions = positionRepository.findByName("Manager");
 //		pos = positions.get(0);
 //		employee.setPos(pos);
-		employee.setSalary(10000);
-		employee.setStartd(LocalDateTime.of(2021, 4, 10, 10, 0, 0));
-		employee.setUsername("boss");
-		employee.setPassword(passwordEncoder.encode("pass"));
-		employee.setRoles(Set.of("user"));
+		employee1.setSalary(10000);
+		employee1.setStartd(LocalDateTime.of(2021, 4, 10, 10, 0, 0));
+		employee1.setUsername("boss");
+		employee1.setPassword(passwordEncoder.encode("pass"));
+		employee1.setRoles(Set.of("user"));
 		//employee.setSuperior(null);
-		employeeRepository.save(employee);
+		employeeRepository.save(employee1);
 //		//Employee boss = employeeRepository.findByUsername("boss").orElseThrow(()-> new UsernameNotFoundException("boss"));
 //		
-		employee = new Employee();
-		employee.setName("Test2");
+		Employee employee2 = new Employee();
+		employee2.setName("Test2");
 		//employee.setPosition("Broker");
 //		positions = positionRepository.findByName("Developer");
 //		pos = positions.get(0);
 //		employee.setPos(pos);
-		employee.setSalary(5000);
-		employee.setStartd(LocalDateTime.of(2022, 4, 3, 0, 0, 0));
-		employee.setUsername("user2");
-		employee.setPassword(passwordEncoder.encode("pass"));
-		employee.setRoles(Set.of("user"));
+		employee2.setSalary(5000);
+		employee2.setStartd(LocalDateTime.of(2022, 4, 3, 0, 0, 0));
+		employee2.setUsername("user2");
+		employee2.setPassword(passwordEncoder.encode("pass"));
+		employee2.setRoles(Set.of("user"));
 		//employee.setSuperior(boss);
-		employeeRepository.save(employee);
+		employeeRepository.save(employee2);
 		
-		employee = new Employee();
-		employee.setName("Test3");
+		Employee employee3 = new Employee();
+		employee3.setName("Test3");
 		//employee.setPosition("Inspector");
 //		positions = positionRepository.findByName("Manager");
 //		pos = positions.get(0);
 //		employee.setPos(pos);
-		employee.setSalary(7000);
-		employee.setStartd(LocalDateTime.of(2020, 6, 5, 0, 0, 0));
-		employee.setUsername("user3");
-		employee.setPassword(passwordEncoder.encode("pass"));
-		employee.setRoles(Set.of("admin","user"));
+		employee3.setSalary(7000);
+		employee3.setStartd(LocalDateTime.of(2020, 6, 5, 0, 0, 0));
+		employee3.setUsername("user3");
+		employee3.setPassword(passwordEncoder.encode("pass"));
+		employee3.setRoles(Set.of("admin","user"));
 		//employee.setSuperior(boss);
-		employeeRepository.save(employee);
+		employeeRepository.save(employee3);
 		
+		employee1.addManagedEmployee(employee2);
+		employee1.addManagedEmployee(employee3);
 		
 		
 		Company company = new Company();

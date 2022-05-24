@@ -1,6 +1,8 @@
 package hu.webuni.hr.nyhp.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Employee {
@@ -32,6 +35,9 @@ public class Employee {
 	
 	@ManyToOne
 	private Employee superior;
+	
+	@OneToMany(mappedBy = "superior")
+	private List<Employee> managedEmployees;
 	
 	@ElementCollection(fetch = FetchType.EAGER) //Role-ok behúzása
 	private Set<String> roles;
@@ -145,12 +151,29 @@ public class Employee {
 	}
 	
 
+	public void addManagedEmployee(Employee emp) {
+		emp.setSuperior(this);
+		if(this.managedEmployees == null) {
+			this.managedEmployees = new ArrayList<>();
+		}
+		this.managedEmployees.add(emp);
+	}
+	
 	public Set<String> getRoles() {
 		return roles;
 	}
 
 	public void setRoles(Set<String> roles) {
 		this.roles = roles;
+	}
+	
+
+	public List<Employee> getManagedEmployees() {
+		return managedEmployees;
+	}
+
+	public void setManagedEmployees(List<Employee> managedEmployees) {
+		this.managedEmployees = managedEmployees;
 	}
 
 	@Override
