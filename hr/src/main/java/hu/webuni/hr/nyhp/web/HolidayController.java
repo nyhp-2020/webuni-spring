@@ -1,5 +1,6 @@
 package hu.webuni.hr.nyhp.web;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -52,7 +53,13 @@ public class HolidayController {
 	//@PreAuthorize("#aid == authentication.principal.employee.id")
 	public HolidayDto judgeRequest(@PathVariable long hid, @PathVariable long aid,
 			@RequestParam(defaultValue = "false") boolean approved) {
-		Holiday holiday = holidayService.judgeRequest(hid, aid, approved);
+		Holiday holiday;
+		try {
+			holiday = holidayService.judgeRequest(hid, aid, approved);
+		} catch (AccessDeniedException e) {
+			e.printStackTrace();
+			holiday = null;
+		}
 		return holidayMapper.holidayToDto(holiday);
 	}
 
@@ -65,7 +72,11 @@ public class HolidayController {
 	
 	@GetMapping("/delete/{hid}/{clid}")
 	public void deleteRequest(@PathVariable long hid, @PathVariable long clid) {
-		holidayService.deleteRequest(hid, clid);
+		try {
+			holidayService.deleteRequest(hid, clid);
+		} catch (AccessDeniedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@PostMapping("/example")

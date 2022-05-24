@@ -1,16 +1,18 @@
 package hu.webuni.hr.nyhp.security;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import hu.webuni.hr.nyhp.config.HrConfigProperties;
+import hu.webuni.hr.nyhp.config.HrConfigProperties.Jwt;
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.model.HrUser;
 
@@ -32,8 +36,24 @@ public class JwtService {
 	private static final String ID = "id";
 	public static final String NAME = "name";
 	static final String AUTH = "auth";
-	private Algorithm alg = Algorithm.HMAC256("mysecret");
-	private String issuer = "HrApp";
+	private Algorithm alg; //= Algorithm.HMAC256("mysecret");
+	private String issuer; //= "HrApp";
+	
+	@Autowired
+	private HrConfigProperties config;
+	
+	@PostConstruct
+	public void init() {
+		Jwt jwt = config.getJwt();
+		this.issuer = jwt.getIssuer();
+		
+		try {
+			this.alg = (Algorithm) Algorithm.class.getMethod(jwt.getAlg(), String.class).invoke(Algorithm.class,jwt.getSecret());
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public String createJwtToken(UserDetails principal) {
 
@@ -54,11 +74,16 @@ public class JwtService {
 			jwtBuilder.withClaim(MANAGED_EMPLOYEES,
 					managedEmployees.stream().map(this::createMapFromEmployee).collect(Collectors.toList()));
 		}
-
+		
 		return jwtBuilder
-
-				.withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2))).withIssuer(issuer)
+				.withExpiresAt(new Date(System.currentTimeMillis() + config.getJwt().getDuration().toMillis()))
+				.withIssuer(issuer)
 				.sign(alg);
+
+//		return jwtBuilder
+//				.withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2)))
+//				.withIssuer(issuer)
+//				.sign(alg);
 
 //		return JWT.create()
 //		.withSubject(principal.getUsername())

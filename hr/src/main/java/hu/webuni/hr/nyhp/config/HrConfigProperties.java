@@ -1,5 +1,7 @@
 package hu.webuni.hr.nyhp.config;
 
+import java.time.Duration;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +14,16 @@ public class HrConfigProperties {
 	private Default def = new Default();
 	private Smart smart = new Smart();
 	
+	private Jwt jwt = new Jwt();
 	
-	
+	public Jwt getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(Jwt jwt) {
+		this.jwt = jwt;
+	}
+
 	public Default getDef() {
 		return def;
 	}
@@ -93,6 +103,38 @@ public class HrConfigProperties {
 		}
 		public void setLimit3(double limit3) {
 			this.limit3 = limit3;
+		}
+		
+	}
+	
+	public static class Jwt{
+		private String issuer;
+		private String alg;
+		private String secret;
+		private Duration duration;
+		public String getIssuer() {
+			return issuer;
+		}
+		public void setIssuer(String issuer) {
+			this.issuer = issuer;
+		}
+		public String getAlg() {
+			return alg;
+		}
+		public void setAlg(String alg) {
+			this.alg = alg;
+		}
+		public String getSecret() {
+			return secret;
+		}
+		public void setSecret(String secret) {
+			this.secret = secret;
+		}
+		public Duration getDuration() {
+			return duration;
+		}
+		public void setDuration(Duration duration) {
+			this.duration = duration;
 		}
 		
 	}

@@ -1,5 +1,6 @@
 package hu.webuni.hr.nyhp.service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,11 +14,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.nyhp.model.Employee;
 import hu.webuni.hr.nyhp.model.Holiday;
+import hu.webuni.hr.nyhp.model.HrUser;
 import hu.webuni.hr.nyhp.repository.HolidayRepository;
 
 @Service
@@ -51,26 +54,25 @@ public class HolidayService {
 	}
 
 	@Transactional
-	//@PreAuthorize("#employee.id == authentication.principal.employee.id")
-	public Holiday judgeRequest(long hid, long aid, boolean approved) {
+	public Holiday judgeRequest(long hid, long aid, boolean approved) throws AccessDeniedException {
 		Holiday holiday = holidayRepository.findById(hid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-		long id =holiday.getClaimer().getSuperior().getId();
-//		System.out.println(id);
+		long approverId =holiday.getClaimer().getSuperior().getId();
+		if(approverId != aid)
+			throw new AccessDeniedException("Approver is not the superior of user");
 		Employee employee = employeeService.findById(aid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-//		if(id == authentication.principal.employee.id)
-		setApprove(holiday,employee,approved,id);
-//		holiday.setApprover(employee);
-//		holiday.setApproved(approved);
+
+//		setApprove(holiday,employee,approved,approverId);
+		holiday.setApprover(employee);
+		holiday.setApproved(approved);
 		return holidayRepository.save(holiday);
 	}
 	
-	@PreAuthorize("#id == authentication.principal.employee.id")
-	public void setApprove(Holiday holiday, Employee employee, boolean approved,long id) {
-		holiday.setApprover(employee);
-		holiday.setApproved(approved);
-	}
+//	public void setApprove(Holiday holiday, Employee employee, boolean approved,long id) {
+//		holiday.setApprover(employee);
+//		holiday.setApproved(approved);
+//	}
 
 	@Transactional
 	public Holiday modifyRequest(long hid, long clid, LocalDate startDate, LocalDate endDate) {
@@ -80,8 +82,13 @@ public class HolidayService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (holiday.getApprover() != null)
 			throw new RequestAlreadyJudgedException();
-		if (holiday.getClaimer().getId() != clid)
-			throw new NotOwnRequesException();
+//		if (holiday.getClaimer().getId() != clid)
+//			throw new NotOwnRequesException();
+		try {
+			checkOwnerOfHolidayRequest(holiday);
+		} catch (AccessDeniedException e) {
+			e.printStackTrace();
+		}
 		if (endDate.isBefore(startDate))
 			throw new EndDateEarlierThanStartDateException();
 		holiday.setStartDate(startDate);
@@ -91,16 +98,29 @@ public class HolidayService {
 	}
 
 	@Transactional
-	public void deleteRequest(long hid, long clid) {
+	public void deleteRequest(long hid, long clid) throws AccessDeniedException {
 		Holiday holiday = holidayRepository.findById(hid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		Employee employee = employeeService.findById(clid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (holiday.getApprover() != null)
 			throw new RequestAlreadyJudgedException();
-		if (holiday.getClaimer().getId() != clid)
-			throw new NotOwnRequesException();
+//		if (holiday.getClaimer().getId() != clid)
+//			throw new NotOwnRequesException();
+		
+		checkOwnerOfHolidayRequest(holiday);
+		
 		holidayRepository.delete(holiday);
+	}
+
+	private void checkOwnerOfHolidayRequest(Holiday holiday) throws AccessDeniedException {
+		HrUser hrUser = getCurrentUser();
+		if(holiday.getClaimer().getId() != hrUser.getEmployee().getId())
+			throw new AccessDeniedException("HolidayRequest is not owned by current user");
+	}
+
+	private HrUser getCurrentUser() {
+		return (HrUser)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	}
 
 	public Page<Holiday> findHolidayByExample(Holiday example, Pageable pageable) {
