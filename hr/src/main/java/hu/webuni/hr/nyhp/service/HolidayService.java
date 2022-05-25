@@ -58,8 +58,8 @@ public class HolidayService {
 		Holiday holiday = holidayRepository.findById(hid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		long approverId =holiday.getClaimer().getSuperior().getId();
-		if(approverId != aid)
-			throw new AccessDeniedException("Approver is not the superior of user");
+		if(approverId != aid || getCurrentUser().getEmployee().getId() != aid)
+			throw new AccessDeniedException("Approver is not the superior of claimer or not current user");
 		Employee employee = employeeService.findById(aid)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -82,8 +82,8 @@ public class HolidayService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (holiday.getApprover() != null)
 			throw new RequestAlreadyJudgedException();
-//		if (holiday.getClaimer().getId() != clid)
-//			throw new NotOwnRequesException();
+		if (holiday.getClaimer().getId() != clid)
+			throw new NotOwnRequesException();
 		try {
 			checkOwnerOfHolidayRequest(holiday);
 		} catch (AccessDeniedException e) {
@@ -105,8 +105,8 @@ public class HolidayService {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		if (holiday.getApprover() != null)
 			throw new RequestAlreadyJudgedException();
-//		if (holiday.getClaimer().getId() != clid)
-//			throw new NotOwnRequesException();
+		if (holiday.getClaimer().getId() != clid)
+			throw new NotOwnRequesException();
 		
 		checkOwnerOfHolidayRequest(holiday);
 		
