@@ -41,6 +41,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>, JpaSp
 	List<Object[]> getAvgSalaryOfCompanyGroupedByPosition(long id);
 
 	//@EntityGraph(attributePaths = { "pos", "company" })
-	@EntityGraph(attributePaths = { "managedEmployees","superior" })
+	@EntityGraph(attributePaths = { "managedEmployees","superior","roles" })
 	Optional<Employee> findByUsername(String username);
 }
