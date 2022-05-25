@@ -46,9 +46,8 @@ public class JwtService {
 	public void init() {
 		Jwt jwt = config.getJwt();
 		this.issuer = jwt.getIssuer();
-		
 		try {
-			this.alg = (Algorithm) Algorithm.class.getMethod(jwt.getAlg(), String.class).invoke(Algorithm.class,jwt.getSecret());
+			this.alg = (Algorithm) Algorithm.class.getMethod(jwt.getAlg(), String.class).invoke(Algorithm.class,jwt.toString());
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
 			e.printStackTrace();
