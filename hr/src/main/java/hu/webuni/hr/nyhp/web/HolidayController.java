@@ -50,7 +50,7 @@ public class HolidayController {
 	}
 
 	@GetMapping("/judge/{hid}/{aid}")
-	//@PreAuthorize("#aid == authentication.principal.employee.id")
+	@PreAuthorize("#aid == authentication.principal.employee.id")
 	public HolidayDto judgeRequest(@PathVariable long hid, @PathVariable long aid,
 			@RequestParam(defaultValue = "false") boolean approved) {
 		Holiday holiday;
@@ -64,6 +64,7 @@ public class HolidayController {
 	}
 
 	@GetMapping("/modify/{hid}/{clid}/from/{start}/to/{end}")
+	@PreAuthorize("#clid == authentication.principal.employee.id")
 	public HolidayDto modifyRequest(@PathVariable long hid, @PathVariable long clid, @PathVariable LocalDate start,
 			@PathVariable LocalDate end) {
 		Holiday holiday = holidayService.modifyRequest(hid, clid, start, end);
