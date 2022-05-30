@@ -2,6 +2,9 @@ package hu.webuni.transport.nyhp.web;
 
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +42,7 @@ public class AddressController {
 //	}
 	
 	@PostMapping
-	public AddressDto createAddress(@RequestBody AddressDto addressDto) {
+	public AddressDto createAddress(@RequestBody @Valid AddressDto addressDto) {
 		Address address = addressService.save(addressMapper.dtoToAddress(addressDto));
 		return addressMapper.addressToDto(address);
 	}
@@ -62,7 +65,7 @@ public class AddressController {
 	}
 	
 	@PutMapping("/{id}")
-	public AddressDto modifyAddress(@PathVariable long id, @RequestBody AddressDto addressDto) {
+	public AddressDto modifyAddress(@PathVariable long id, @RequestBody @Valid AddressDto addressDto) {
 		return addressMapper.addressToDto(addressService.modifyAddress(id, addressMapper.dtoToAddress(addressDto)));
 	}
 	

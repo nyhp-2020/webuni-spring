@@ -1,13 +1,22 @@
 package hu.webuni.transport.nyhp.dto;
 
-
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class AddressDto {
-	//@Empty
+	
 	private long id;
+	@NotNull
+	@NotEmpty
 	private String isoCode;
+	@NotNull
+	@NotEmpty
 	private String zipcode;
+	@NotNull
+	@NotEmpty
 	private String city;
+	@NotNull
+	@NotEmpty
 	private String street;
 	private String streetNumber;
 	private double latitude;
