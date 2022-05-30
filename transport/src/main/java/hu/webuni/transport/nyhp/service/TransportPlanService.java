@@ -51,11 +51,21 @@ public class TransportPlanService {
 			if(section.getFromMilestone().equals(milestone)) {
 				milestoneInPath = true;
 				foundSection = section;
+				milestone.setPlannedTime(milestone.getPlannedTime().plusMinutes(delayRequestDto.getDelayMinute()));
+//				milestoneRepository.save(milestone); //Transaction do this
+				Milestone toMilestone = section.getToMilestone();
+				toMilestone.setPlannedTime(toMilestone.getPlannedTime().plusMinutes(delayRequestDto.getDelayMinute()));
 				break;
 			}
 			if(section.getToMilestone().equals(milestone)) {
 				milestoneInPath = true;
 				foundSection = section;
+				milestone.setPlannedTime(milestone.getPlannedTime().plusMinutes(delayRequestDto.getDelayMinute()));
+				int index = sections.indexOf(section); //index of current section
+				if(index < sections.size()-1) { //if exist next section
+					Milestone fromMilestoneOfNextSection = sections.get(index+1).getFromMilestone();
+					fromMilestoneOfNextSection.setPlannedTime(fromMilestoneOfNextSection.getPlannedTime().plusMinutes(delayRequestDto.getDelayMinute()));
+				}
 				break;
 			}
 		}
