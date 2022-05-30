@@ -3,9 +3,11 @@ package hu.webuni.transport.nyhp.web;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,20 +16,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.transport.nyhp.dto.AddressDto;
 import hu.webuni.transport.nyhp.mapper.AddressMapper;
 import hu.webuni.transport.nyhp.model.Address;
+import hu.webuni.transport.nyhp.repository.AddressRepository;
 import hu.webuni.transport.nyhp.service.AddressService;
+
 
 @RestController
 @RequestMapping("/api/addresses")
 public class AddressController {
 	
-//	@Autowired
-//	AddressRepository addressRepository;
+	@Autowired
+	AddressRepository addressRepository;
 	
 	@Autowired
 	AddressMapper addressMapper;
@@ -70,8 +75,12 @@ public class AddressController {
 	}
 	
 	@PostMapping("/search")
-	public List<AddressDto> findAddressesByExample(@RequestBody AddressDto addressDto) {
+	public List<AddressDto> findAddressesByExample(@RequestBody AddressDto addressDto,@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(required = false) Integer size, @RequestParam(defaultValue = "id") String sort){
 		Address address = addressMapper.dtoToAddress(addressDto);
-		return addressMapper.addressesToDtos(addressService.findAddressesByExample(address));
+		if(size == null)
+			size = (int)addressRepository.count();
+		Pageable pageable = PageRequest.of(page,size,Sort.by(sort));
+		return addressMapper.addressesToDtos(addressService.findAddressesByExample(address,pageable));
 	}
 }

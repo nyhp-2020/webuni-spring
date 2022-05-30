@@ -6,7 +6,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class AddressService {
 	
 	@Transactional
 	public void delete(long id) {
+		findById(id)
+		.orElseThrow(() -> new ResponseStatusException(HttpStatus.OK));
 		addressRepository.deleteById(id);
 	}
 	
@@ -55,7 +58,10 @@ public class AddressService {
 //		return holidays;
 //	}
 	
-	public List<Address> findAddressesByExample(Address example) {
+	public List<Address> findAddressesByExample(Address example,Pageable pageable) {
+		if(example == null)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		
 		String isoCode = example.getIsoCode();
 		String city = example.getCity();
 		String zipcode = example.getZipcode();
@@ -79,9 +85,10 @@ public class AddressService {
 			spec = spec.and(AddressSpecifications.hasStreet(street));
 		}
 		
-		return addressRepository.findAll(spec, Sort.by("id"));
+		//return addressRepository.findAll(spec, Sort.by("id"));
 		
-		//return addressRepository.findAll(spec, pageable);
+		Page<Address> page = addressRepository.findAll(spec, pageable);
+		return page.getContent();
 	}
 
 }
