@@ -1,10 +1,13 @@
 package hu.webuni.transport.nyhp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class TransportPlan {
@@ -13,7 +16,9 @@ public class TransportPlan {
 	@GeneratedValue
 	private long id;
 	private long income;
-	private List<Section> sections;
+	@OneToMany
+	@OrderBy("number")
+	private List<Section> sections = new ArrayList<>();
 	
 	public TransportPlan() {}
 	

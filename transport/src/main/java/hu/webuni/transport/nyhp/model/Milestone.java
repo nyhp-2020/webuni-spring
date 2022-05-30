@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Milestone {
 	@Id
 	@GeneratedValue
 	private long id;
+	@ManyToOne
 	private Address address;
 	private LocalDateTime plannedTime;
 	

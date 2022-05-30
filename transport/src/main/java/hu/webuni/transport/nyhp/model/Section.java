@@ -3,6 +3,7 @@ package hu.webuni.transport.nyhp.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Section {
@@ -10,7 +11,9 @@ public class Section {
 	@Id
 	@GeneratedValue
 	private long id;
+	@OneToOne
 	private Milestone fromMilestone;
+	@OneToOne
 	private Milestone toMilestone;
 	private long number;
 	
