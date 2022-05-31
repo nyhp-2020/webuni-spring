@@ -61,10 +61,10 @@ public class Milestone {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (! (obj instanceof Milestone))
 			return false;
 		Milestone other = (Milestone) obj;
-		return id == other.id;
+		return getId() == other.getId();
 	}
 	
 	
