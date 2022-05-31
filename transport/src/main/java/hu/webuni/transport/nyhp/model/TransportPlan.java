@@ -2,6 +2,7 @@ package hu.webuni.transport.nyhp.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,6 +52,23 @@ public class TransportPlan {
 
 	public void setSections(List<Section> sections) {
 		this.sections = sections;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TransportPlan other = (TransportPlan) obj;
+		return id == other.id;
 	}
 
 	
