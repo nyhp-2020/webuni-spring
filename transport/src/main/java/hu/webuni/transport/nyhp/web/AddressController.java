@@ -83,8 +83,11 @@ public class AddressController {
 			size = (int) addressRepository.count();
 
 		String[] sortlist = sort.split(",");
-		;
-		String order = sortlist[0];
+		String order;
+		if (sortlist.length < 1)
+			order = null;
+		else
+			order = sortlist[0];
 		if (order == null || order.length() == 0)
 			order = "id";
 		String direction;
