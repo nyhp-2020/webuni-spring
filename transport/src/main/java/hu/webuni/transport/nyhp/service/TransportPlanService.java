@@ -75,8 +75,8 @@ public class TransportPlanService {
 		if(!milestoneInPath)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 		
-		//transportPlan.setIncome(incomeService.getNewIncome(transportPlan.getIncome(), delayRequestDto.getDelayMinute()));
-		transportPlanRepository.save(transportPlan);//also Transaction do this
+		transportPlan.setIncome(incomeService.getNewIncome(transportPlan.getIncome(), delayRequestDto.getDelayMinute()));
+//		transportPlanRepository.save(transportPlan);//also Transaction do this
 		
 	}
 
