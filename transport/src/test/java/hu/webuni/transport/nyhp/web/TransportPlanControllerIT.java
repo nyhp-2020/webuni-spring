@@ -111,7 +111,7 @@ public class TransportPlanControllerIT {
 		
 		setDelay(tpid,delayRequestDto);
 		
-		long afterIncome = transportPlanRepository.getReferenceById(tpid).getIncome();
+		long afterIncome = transportPlanRepository.findById(tpid).get().getIncome();
 		
 		System.out.println(afterIncome);
 		
